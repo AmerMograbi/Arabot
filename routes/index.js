@@ -1,5 +1,4 @@
 var express = require('express');
-var router = express.Router();
 var pg = require('pg');
 var xhub = require('express-x-hub');
 var request = require('request');
@@ -13,7 +12,7 @@ app.listen(app.get('port'));
 app.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
 app.use(bodyParser.json());
 
-router.get('/webhook', function(req, res) {
+app.get('/webhook', function(req, res) {
   if (req.query['hub.mode'] === 'subscribe' &&
       req.query['hub.verify_token'] === process.env.VERIFY_TOKEN) {
     console.log("Validating webhook");
@@ -24,7 +23,7 @@ router.get('/webhook', function(req, res) {
   }  
 });
 
-router.get('/db', function (request, response) {
+app.get('/db', function (request, response) {
   pg.connect(process.env.DATABASE_URL, function(err, client, done) {
     client.query('SELECT * FROM users_table', function(err, result) {
       done();
@@ -37,8 +36,8 @@ router.get('/db', function (request, response) {
 });
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'AMOOOOOR' });
+app.get('/', function(req, res) {
+  console.log(req);
+  res.send('It works! foo');
 });
 
-module.exports = router;
