@@ -86,7 +86,7 @@ function receivedMessage(event) {
 
   var messageId = message.mid;
 
-  var messageText = message.text + " datte bayo!";
+  var messageText = message.text;
   var messageAttachments = message.attachments;
 
   if (messageText) {
