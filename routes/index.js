@@ -3,13 +3,15 @@ var router = express.Router();
 var pg = require('pg');
 var xhub = require('express-x-hub');
 var request = require('request');
+var app = express();
+var bodyParser = require('body-parser');
 
 
-router.set('port', (process.env.PORT || 5000));
-router.listen(router.get('port'));
+app.set('port', (process.env.PORT || 5000));
+app.listen(app.get('port'));
 
-router.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
-router.use(bodyParser.json());
+app.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
+app.use(bodyParser.json());
 
 router.get('/webhook', function(req, res) {
   if (req.query['hub.mode'] === 'subscribe' &&
