@@ -95,7 +95,7 @@ function receivedMessage(event) {
     // and send back the example. Otherwise, just echo the text we received.
     console.log("messageText= '%s'", messageText);
     switch (messageText) { 	
-      case 'generic':
+      case 'Romance':
       	console.log("got in the generic case");
         sendGenericMessage(senderID);
         break;
@@ -132,13 +132,13 @@ function sendGenericMessage(recipientId) {
         payload: {
           template_type: "generic",
           elements: [{
-            title: "rift",
-            subtitle: "Next-generation virtual reality",
-            item_url: "https://www.oculus.com/en-us/rift/",               
-            image_url: "http://messengerdemo.parseapp.com/img/rift.png",
+            title: "بويراز كارايل",
+            subtitle: "hello there",
+            item_url: "http://www.3sk.tv/vb/showthread.php?p=4084966",               
+            image_url: "https://3sk.tv/art_imgs/148843464120532268.gif",
             buttons: [{
               type: "web_url",
-              url: "https://www.oculus.com/en-us/rift/",
+              url: "http://www.3sk.tv/vb/showthread.php?p=4084966",
               title: "Open Web URL"
             }, {
               type: "postback",
