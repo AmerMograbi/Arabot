@@ -1,6 +1,26 @@
 var express = require('express');
 var router = express.Router();
 var pg = require('pg');
+var xhub = require('express-x-hub');
+var request = require('request');
+
+
+router.set('port', (process.env.PORT || 5000));
+router.listen(router.get('port'));
+
+router.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
+router.use(bodyParser.json());
+
+router.get('/webhook', function(req, res) {
+  if (req.query['hub.mode'] === 'subscribe' &&
+      req.query['hub.verify_token'] === process.env.VERIFY_TOKEN) {
+    console.log("Validating webhook");
+    res.status(200).send(req.query['hub.challenge']);
+  } else {
+    console.error("Failed validation. Make sure the validation tokens match.");
+    res.sendStatus(403);          
+  }  
+});
 
 router.get('/db', function (request, response) {
   pg.connect(process.env.DATABASE_URL, function(err, client, done) {
