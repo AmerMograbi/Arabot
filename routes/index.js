@@ -4,7 +4,7 @@ var xhub = require('express-x-hub');
 var request = require('request');
 var app = express();
 var bodyParser = require('body-parser');
-var fbMessenger = require('fb-messenger');
+var fbMessenger = require('../lib/fb-messenger');
 
 
 app.set('port', (process.env.PORT || 5000));
