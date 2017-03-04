@@ -4,6 +4,7 @@ var xhub = require('express-x-hub');
 var request = require('request');
 var app = express();
 var bodyParser = require('body-parser');
+var fbMessenger = require('fb-messenger');
 
 
 app.set('port', (process.env.PORT || 5000));
@@ -39,9 +40,9 @@ app.post('/webhook', function (req, res) {
       // Iterate over each messaging event
       entry.messaging.forEach(function(event) {
         if (event.message) {
-          receivedMessage(event);
+          fbMessenger.receivedMessage(event);
         } else if (event.postback) {
-          receivedPostback(event);
+          fbMessenger.receivedPostback(event);
       	} else {
           console.log("Webhook received unknown event: ", event);
         } 
@@ -57,7 +58,7 @@ app.post('/webhook', function (req, res) {
   }
 });
 
-function receivedPostback(event) {
+/*function receivedPostback(event) {
   var senderID = event.sender.id;
   var recipientID = event.recipient.id;
   var timeOfPostback = event.timestamp;
@@ -188,7 +189,7 @@ function callSendAPI(messageData) {
       console.error(error);
     }
   });  
-}
+}*/
 
 app.get('/db', function (request, response) {
   pg.connect(process.env.DATABASE_URL, function(err, client, done) {
