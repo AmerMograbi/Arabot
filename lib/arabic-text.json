@@ -1,11 +1,10 @@
 {
-	"Hello, I am Arabot! I will help you choose the next movie or series to watch. What would you like to watch?": "مرحبا أنا Arabot، سأكون مساعدك الشخصي في اختيار أفلامك ومسلسلاتك المفضلة! ماذا ترغب أن تشاهد؟",
-	"What would you like to watch?": "ماذا ترغب أن تشاهد؟",
-	"Foreign Movie": "فيلم أجنبي",
-	"Forein Series": "مسلسل أجنبي",
-	"Turkish Series": "مسلسل تركي",
-	"What genre are you in the mood to watch?": "ما هو مزاجك الآن؟ هل تريد أن تضحك من كل قلبك؟ أم أنك تريد أن تقع في الحب؟ أو أنك تتوق إلى الأدرينالين والأكشن؟",
-	"What do you think about this movie?": "ما رأيك بهذا الفيلم؟",
-	"What do you think about this series?": "ما رأيك بهذا المسلسل؟",
-	"Choose 3 genres at most": "اختر 3 أنواع كحدٍّ أقصى"
+	"firstGreeting": "مرحبا أنا Arabot، سأكون مساعدك الشخصي في اختيار أفلامك ومسلسلاتك المفضلة! ماذا ترغب أن تشاهد؟",
+	"foreignMovie": "فيلم أجنبي",
+	"foreinSeries": "مسلسل أجنبي",
+	"turkishSeries": "مسلسل تركي",
+	"whatToWatch": "ما هو مزاجك الآن؟",
+	"whatAbtThisMovie": "ما رأيك بهذا الفيلم؟",
+	"whatAbtThisSeries": "ما رأيك بهذا المسلسل؟",
+	"choose3TypesAtMost": "اختر 3 أنواع كحدٍّ أقصى"
 }
