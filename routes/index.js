@@ -6,6 +6,9 @@ var app = express();
 var bodyParser = require('body-parser');
 var fbMessenger = require('../lib/fb-messenger');
 
+//for testing
+var arabicText = require('../lib/arabic-text.json');
+
 
 app.set('port', (process.env.PORT || 5000));
 app.listen(app.get('port'));
@@ -73,6 +76,6 @@ app.get('/db', function (request, response) {
 /* GET home page. */
 app.get('/', function(req, res) {
   console.log(req);
-  res.send('It works! foo');
+  res.send("yellow! express is working!");
 });
 
