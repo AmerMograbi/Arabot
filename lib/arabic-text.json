@@ -1,5 +1,5 @@
 {
-	"Hello, I am Arabot! I will help you choose the next movie or series to watch.": "مرحبا أنا Arabot، سأكون مساعدك الشخصي في اختيار أفلامك ومسلسلاتك المفضلة! هيّا نبدأ!"
+	"Hello, I am Arabot! I will help you choose the next movie or series to watch.": "مرحبا أنا Arabot، سأكون مساعدك الشخصي في اختيار أفلامك ومسلسلاتك المفضلة! هيّا نبدأ!",
 	"What would you like to watch?": "ماذا ترغب أن تشاهد؟",
 	"Foreign Movie": "فيلم أجنبي",
 	"Forein Series": "مسلسل أجنبي",
@@ -8,5 +8,4 @@
 	"What do you think about this movie?": "ما رأيك بهذا الفيلم؟",
 	"What do you think about this series?": "ما رأيك بهذا المسلسل؟",
 	"Choose 3 genres at most": "اختر 3 أنواع كحدٍّ أقصى"
-
 }
