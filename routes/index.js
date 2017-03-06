@@ -72,7 +72,16 @@ app.get('/db', function (request, response) {
 
 /* GET home page. */
 app.get('/', function(req, res) {	
-	console.log("didn't get in!");
-	res.send("got in");
+
+	var reply = {
+		"quick_reply":{
+			"payload": "turkish series"
+		},
+		"mid": "mid.1488783782205:f7acced784",
+		"seq": 21933,
+		"text": "مسلسل تركي"
+	};
+	console.log(reply.quick_reply.payload);
+	res.send(reply.quick_reply.payload);
 });
 
