@@ -1,0 +1,10 @@
+{
+	"❤️😁": 	{"romanceComedy": ""},
+	"❤️😭": 	{"romanceDrama": ""},
+	"😭": 	{"drama": ""},
+	"😁": 	{"comedy": ""},
+	"🔫": 	{"actionCrime": ""},
+	"😰": 	{"thriller": ""},
+	"👻": 	{"horror": ""},
+	"👽": 	{"fantasy": ""}	
+}
