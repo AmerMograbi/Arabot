@@ -71,8 +71,8 @@ app.get('/db', function (request, response) {
 });
 
 /* GET home page. */
-app.get('/', function(req, res) {
-  console.log(req);
-  res.send("yellow! express is working!");
+app.get('/', function(req, res) {	
+	console.log("didn't get in!");
+	res.send("got in");
 });
 
