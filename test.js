@@ -4,7 +4,7 @@ const arabicText = require('./arabic-text.json');
 const messageBuilder = require('./lib/message-builder.js');
 const fbMessenger = require('./lib/fb-messenger.js');
 
-var msg = messageBuilder.getQuickReplyResponse("foreign movie", 123);
+
 
 const event = {
 	message:{
@@ -23,6 +23,9 @@ const event = {
 
 };
 
+//var msg = messageBuilder.getQuickReplyResponse("foreign movie", 123);
 //fbMessenger.receivedMessage(event);
+var msg = messageBuilder.getGettingStartedResponse("123");
+
 
 
