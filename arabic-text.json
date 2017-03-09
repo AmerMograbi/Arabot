@@ -5,6 +5,18 @@
 		"foreign series": "مسلسل أجنبي",
 		"turkish series": "مسلسل تركي"
 	},
+	"genresText": "ما هو مزاجك الآن؟",
+	"genres":{
+	 	"romance comedy": "❤️😁",
+	 	"romance drama": "❤️😭",
+	 	"drama": "😭",
+	 	"comedy": "😁",
+	 	"actionCrime": "🔫",
+	 	"thriller": "😰",
+	 	"horror": "👻",
+	 	"fantasy": "👽"
+	},
+
 
 
 	"what to watch": "ما هو مزاجك الآن؟",

@@ -9,7 +9,7 @@ const fbMessenger = require('./lib/fb-messenger.js');
 const event = {
 	message:{
 		quick_reply: {
-			payload: "foreign movie"
+			payload: "showTypes->foreign series"
 		},
 		text: "hello"
 	},
@@ -23,9 +23,11 @@ const event = {
 
 };
 
-//var msg = messageBuilder.getQuickReplyResponse("foreign movie", 123);
+//var msg = messageBuilder.getQuickReplyResponse("showTypes-foreign movie", 123);
+var msg = messageBuilder.getQuickReplyResponse("showTypes->foreign movie", 123);
 //fbMessenger.receivedMessage(event);
-var msg = messageBuilder.getGettingStartedResponse("123");
+//var msg = messageBuilder.getGettingStartedResponse("123");
+
 
 
 
