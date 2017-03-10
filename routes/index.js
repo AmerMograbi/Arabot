@@ -1,10 +1,10 @@
 var express = require('express');
-var pg = require('pg');
 var xhub = require('express-x-hub');
 var request = require('request');
 var app = express();
 var bodyParser = require('body-parser');
 var fbMessenger = require('../lib/fb-messenger');
+var database = require('../lib/database.js');
 
 
 app.set('port', (process.env.PORT || 5000));
@@ -13,6 +13,12 @@ app.listen(app.get('port'));
 
 app.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
 app.use(bodyParser.json());
+
+try{
+  database.init();
+}catch(e){
+  console.log("Failed to connect to the database.");
+}
 
 app.get('/webhook', function(req, res) {
   if (req.query['hub.mode'] === 'subscribe' &&
