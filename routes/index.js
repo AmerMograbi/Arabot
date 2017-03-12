@@ -50,10 +50,11 @@ app.post('/webhook', function(req, res) {
 
       // Iterate over each messaging event
       entry.messaging.forEach(function(event) {
+        let messageTosendBack;
         if (event.message) { 
-          const messageTosendBack = fbMessenger.receivedMessage(event);
+           messageTosendBack = fbMessenger.receivedMessage(event);
         } else if (event.postback) {
-          const messageTosendBack = fbMessenger.receivedPostback(event); 
+           messageTosendBack = fbMessenger.receivedPostback(event); 
         } else {
           throw new Error("Webhook received unknown event: " + event);
         }
