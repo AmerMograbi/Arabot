@@ -1,38 +1,43 @@
-var express = require('express');
-var xhub = require('express-x-hub');
-var request = require('request');
-var app = express();
-var bodyParser = require('body-parser');
-var fbMessenger = require('../lib/fb-messenger');
-var database = require('../lib/database.js');
+/*jshint esversion: 6 */
+
+let express = require('express');
+let xhub = require('express-x-hub');
+let request = require('request');
+let app = express();
+let bodyParser = require('body-parser');
+let fbMessenger = require('../lib/fb-messenger');
+let database = require('../lib/database.js');
 
 
 app.set('port', (process.env.PORT || 5000));
 app.listen(app.get('port'));
 
 
-app.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
+app.use(xhub({
+  algorithm: 'sha1',
+  secret: process.env.APP_SECRET
+}));
 app.use(bodyParser.json());
 
-try{
+try {
   database.init();
-}catch(e){
+} catch (e) {
   console.log("Failed to connect to the database.");
 }
 
 app.get('/webhook', function(req, res) {
   if (req.query['hub.mode'] === 'subscribe' &&
-      req.query['hub.verify_token'] === process.env.VERIFY_TOKEN) {
+    req.query['hub.verify_token'] === process.env.VERIFY_TOKEN) {
     console.log("Validating webhook");
     res.status(200).send(req.query['hub.challenge']);
   } else {
     console.error("Failed validation. Make sure the validation tokens match.");
-    res.sendStatus(403);          
-  }  
+    res.sendStatus(403);
+  }
 });
 
 
-app.post('/webhook', function (req, res) {
+app.post('/webhook', function(req, res) {
   var data = req.body;
 
   // Make sure this is a page subscription
@@ -45,13 +50,14 @@ app.post('/webhook', function (req, res) {
 
       // Iterate over each messaging event
       entry.messaging.forEach(function(event) {
-        if (event.message) {
-          fbMessenger.receivedMessage(event);
+        if (event.message) { 
+          const messageTosendBack = fbMessenger.receivedMessage(event);
         } else if (event.postback) {
-          fbMessenger.receivedPostback(event);
-      	} else {
-          console.log("Webhook received unknown event: ", event);
-        } 
+          const messageTosendBack = fbMessenger.receivedPostback(event); 
+        } else {
+          throw new Error("Webhook received unknown event: " + event);
+        }
+        fbMessenger.sendMessage(messageTosendBack);
       });
     });
 
@@ -64,30 +70,31 @@ app.post('/webhook', function (req, res) {
   }
 });
 
-app.get('/db', function (request, response) {
+app.get('/db', function(request, response) {
   pg.connect(process.env.DATABASE_URL, function(err, client, done) {
     client.query('SELECT * FROM users_table', function(err, result) {
       done();
-      if (err)
-       { console.error(err); response.send("Error " + err); }
-      else
-       { response.send(result.rows); }
+      if (err) {
+        console.error(err);
+        response.send("Error " + err);
+      } else {
+        response.send(result.rows);
+      }
     });
   });
 });
 
 /* GET home page. */
-app.get('/', function(req, res) {	
+app.get('/', function(req, res) {
 
-	var reply = {
-		"quick_reply":{
-			"payload": "turkish series"
-		},
-		"mid": "mid.1488783782205:f7acced784",
-		"seq": 21933,
-		"text": "مسلسل تركي"
-	};
-	console.log(reply.quick_reply.payload);
-	res.send(reply.quick_reply.payload);
+  var reply = {
+    "quick_reply": {
+      "payload": "turkish series"
+    },
+    "mid": "mid.1488783782205:f7acced784",
+    "seq": 21933,
+    "text": "مسلسل تركي"
+  };
+  console.log(reply.quick_reply.payload);
+  res.send(reply.quick_reply.payload);
 });
-

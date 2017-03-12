@@ -24,5 +24,8 @@
   "description": "An arabic facebook messenger chatbot for shows.",
   "engines": {
     "node": "6.10.0"
+  },
+  "scripts": {
+    "test": "mocha"
   }
 }
