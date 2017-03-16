@@ -1,25 +1,34 @@
 {
 	"showTypesText": "مرحبا أنا Arabot، سأكون مساعدك الشخصي في اختيار أفلامك ومسلسلاتك المفضلة! ماذا ترغب أن تشاهد؟",
 	"showTypes":{
-		"foreign movie": "فيلم أجنبي",
+		"foreign movies": "فيلم أجنبي",
 		"foreign series": "مسلسل أجنبي",
 		"turkish series": "مسلسل تركي"
 	},
 	"genresText": "ما هو مزاجك الآن؟",
 	"genres":{
-	 	"romance comedy": "❤️😁",
-	 	"romance drama": "❤️😭",
-	 	"drama": "😭",
-	 	"comedy": "😁",
-	 	"actionCrime": "🔫",
-	 	"thriller": "😰",
-	 	"horror": "👻",
-	 	"fantasy": "👽"
+	 	"Romance+Comedy": "❤️😁",
+	 	"Romance+Drama": "❤️😢",
+	 	"Drama": "😢",
+	 	"Comedy": "😁",
+	 	"Action": "🔫",
+	 	"Thriller": "😰",
+	 	"Horror": "👻",
+	 	"Fantasy": "👽",
+	 	"Adventure": "🎢",
+	 	"Children": "🐣"
 	},
 
 
 
 	"what to watch": "ما هو مزاجك الآن؟",
 	"what about thisMovie": "ما رأيك بهذا الفيلم؟",
-	"what about this series": "ما رأيك بهذا المسلسل؟"
+	"what about this series": "ما رأيك بهذا المسلسل؟",
+
+
+	"showButtons": {
+		"will watch": "سأشاهده",
+		"next show": "التالي"
+	}
+
 }

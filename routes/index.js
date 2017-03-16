@@ -19,11 +19,13 @@ app.use(xhub({
 }));
 app.use(bodyParser.json());
 
-try {
-  database.init();
-} catch (e) {
-  console.log("Failed to connect to the database.");
-}
+database.init().then(() => {
+    console.log("Successfully connected to the database.");
+  })
+  .catch(err => {
+    throw new Error("Cannot connect to the database.");
+  });
+
 
 app.get('/webhook', function(req, res) {
   if (req.query['hub.mode'] === 'subscribe' &&
@@ -51,14 +53,14 @@ app.post('/webhook', function(req, res) {
       // Iterate over each messaging event
       entry.messaging.forEach(function(event) {
         let messageTosendBack;
-        if (event.message) { 
-           messageTosendBack = fbMessenger.receivedMessage(event);
+        if (event.message) {
+          messageTosendBack = fbMessenger.receivedMessage(event);
         } else if (event.postback) {
-           messageTosendBack = fbMessenger.receivedPostback(event); 
+          messageTosendBack = fbMessenger.receivedPostback(event);
         } else {
           throw new Error("Webhook received unknown event: " + event);
         }
-        fbMessenger.sendMessage(messageTosendBack);
+        sendMessage(messageTosendBack);
       });
     });
 
@@ -99,3 +101,16 @@ app.get('/', function(req, res) {
   console.log(reply.quick_reply.payload);
   res.send(reply.quick_reply.payload);
 });
+
+function sendMessage(messageTosendBack) {
+  const isPromise = typeof messageTosendBack.then == 'function';
+  if (isPromise) {
+    messageTosendBack
+      .then(msg => fbMessenger.sendMessage(msg))
+      .catch(e => {
+        throw new Error("Failed to recieve message to send back due to err: " + e);
+      });
+  } else {
+    fbMessenger.sendMessage(messageTosendBack);
+  }
+}
