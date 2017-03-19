@@ -10,7 +10,7 @@ const messageBuilderTest = require('./message-builder-test.js');
 const quickReplyEventShowType = {
 	message: {
 		quick_reply: {
-			payload: "showTypes->foreign movies"
+			payload: "showTypes:foreign movies"
 		},
 		text: "hello"
 	},
@@ -26,7 +26,7 @@ const quickReplyEventShowType = {
 const quickReplyEventGenre = {
 	message: {
 		quick_reply: {
-			payload: "genres->Action"
+			payload: "showTypes:foreign movies->genres:Action"
 		},
 		text: "hello"
 	},

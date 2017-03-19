@@ -111,6 +111,7 @@ function sendMessage(messageTosendBack) {
         throw new Error("Failed to recieve message to send back due to err: " + e);
       });
   } else {
-    fbMessenger.sendMessage(messageTosendBack);
+    if(messageTosendBack)
+      fbMessenger.sendMessage(messageTosendBack);
   }
 }

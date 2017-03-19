@@ -25,17 +25,10 @@ fs.readdirSync(testDir).filter(function(file) {
 
 database.init().then(() => {
 		mocha.run(function(failures) {
-				process.on('exit', function() {
-					process.exit(failures);
-				});
-			})
-			.on('fail', function(test, err) {
-				//console.log('Test fail');
-				//console.log("title of failed test: " + test.title);
-				//console.log(err);
-				//const stackTrace = test.err.stack;
-				//console.log("stackTrace: " + stackTrace);
+			process.on('exit', function() {
+				process.exit(failures);
 			});
+		});
 	})
 	.catch(e => console.log("Something went wrong with err: " + e));
 
