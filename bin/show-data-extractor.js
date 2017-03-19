@@ -42,11 +42,11 @@ function addMatchedToArray(match, nameAndGenres, description, shows) {
 	const genreSeparator = /\s*\+\s*/;
 
 	const name = nameAndGenres.match(nameRegex)[0]
-	.replace(/[ \t]*$/, '');
+		.replace(/[ \t]*$/, '');
 
 	const genres = nameAndGenres.match(genreRegex)[1].split(genreSeparator)
-	.map(genre => genre.replace(/\s/g, ''))
-	.map(genre => genre.replace(/,/g, '+'));
+		.map(genre => genre.replace(/\s/g, ''))
+		.map(genre => genre.replace(/,/g, '+'));
 
 	let show = {
 		"name": name,
@@ -75,11 +75,13 @@ function getJsonAndAddData(show) {
 
 			if (!error && response.statusCode == 200) {
 				const firstResult = body.results[0];
-				if(firstResult)
+				if (firstResult) {
 					show.releaseDate = firstResult.release_date;
-				else
+					show.imageUrl = firstResult.backdrop_path;
+				} else {
 					console.log("Couldn't find " + show.name);
-				//show.imageUrl = firstResult.poster_path;
+				}
+
 				delete show.url;
 				resolve(show);
 

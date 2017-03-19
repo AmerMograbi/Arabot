@@ -35,4 +35,5 @@ npm-debug.log
 env
 
 myNotes/
+*.txt
 

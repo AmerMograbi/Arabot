@@ -2,20 +2,19 @@
 const showDataExtractor = require('../bin/show-data-extractor.js');
 const database = require('../lib/database.js');
 const arabicText = require('../arabic-text.json');
+const filePath = "D:\\gitProjects\\showBot\\bin\\movies.txt";
 
-let shows;
+add(showDataExtractor.getJsonFromTxtFile(filePath));
 
+//dropDb();
 
-
-function add() {
-	const showsType = "movie";
+function add(shows) {
+	const movie = "movie";
 	const maxShowNum = 39;
-	const filePath = "D:\\gitProjects\\showBot\\bin\\movies.txt";
-
-	shows = showDataExtractor.getJsonFromTxtFile(filePath);
+	
 	console.log("adding...");
-	showDataExtractor.addMoreDataFromApi(shows.slice(0, maxShowNum), showsType)
-		.then(showsWithMoreData => addToDb(showsWithMoreData)) //console.log(showsWithMoreData.length))
+	showDataExtractor.addMoreDataFromApi(shows.slice(0, maxShowNum), movie)
+		.then(showsWithMoreData => addToDb(showsWithMoreData, shows))//console.log(showsWithMoreData.length)) 
 		.catch((err) => console.log(err));
 }
 
@@ -43,7 +42,7 @@ function findInDb(genre) {
 }
 
 
-function addToDb(showsWithMoreData) {
+function addToDb(showsWithMoreData, shows) {
 	database.init().then(() => {
 			database.insert("foreign movies", showsWithMoreData)
 				.then(res => {
@@ -51,8 +50,10 @@ function addToDb(showsWithMoreData) {
 					shows.splice(0, 39);
 					console.log("Number of shows remaining: " + shows.length);
 					if (shows.length > 0) {
-						setTimeout(add, 13000);
+						setTimeout(()=>add(shows), 13000);
 						console.log("waiting 13 seconds...");
+					}else{
+						console.log("All Done!");
 					}
 
 				});
@@ -65,4 +66,7 @@ function addToDb(showsWithMoreData) {
 //https://api.themoviedb.org/3/search/movie?api_key=c1d387802a440ec1351f3847005cef6a&query=Me+Before+You
 //http://image.tmdb.org/t/p/w185//oN5lELHH5Xheiy0YdhnY3JB4hx2.jpg
 //where '/oN5lELHH5Xheiy0YdhnY3JB4hx2.jpg' is the poster path
+
+//http://image.tmdb.org/t/p/w342//o4lxNwKJz8oq3R0kLOIsDlHbDhZ.jpg
+
 //and w185 is the size
