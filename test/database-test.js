@@ -13,7 +13,7 @@ const movie = [{
 	description: "يسرد الفيلم قصة حب جندي أمريكي وفتاة جامعية محافظة، ينقل لنا الفيلم لحظات حب جميلة ورسائل مفعمة بالأحاسيس بين الاثنين، لكن أحداث 11\9 تهدد استقرار العلاقة!"
 }];
 
-//don't test the DB unless you connect ot the localhost one!!
+//don't modify the DB unless you connect ot the localhost one!!
 
 /*describe('Database', function() {
 

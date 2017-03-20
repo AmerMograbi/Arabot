@@ -27,8 +27,8 @@
 
 
 	"showButtons": {
-		"will watch": "سأشاهده",
-		"next show": "التالي"
+		"willWatch": "سأشاهده",
+		"moreInfo": "المزيد"
 	}
 
 }

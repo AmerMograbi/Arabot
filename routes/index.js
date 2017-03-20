@@ -89,17 +89,11 @@ app.get('/db', function(request, response) {
 
 /* GET home page. */
 app.get('/', function(req, res) {
+  res.send("Nothing to see here. Move along.");
+});
 
-  var reply = {
-    "quick_reply": {
-      "payload": "turkish series"
-    },
-    "mid": "mid.1488783782205:f7acced784",
-    "seq": 21933,
-    "text": "مسلسل تركي"
-  };
-  console.log(reply.quick_reply.payload);
-  res.send(reply.quick_reply.payload);
+app.get('/:showID', function(req, res) {
+  res.send("the show id is: " + req.params.showID);
 });
 
 function sendMessage(messageTosendBack) {

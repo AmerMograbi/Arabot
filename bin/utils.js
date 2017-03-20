@@ -4,7 +4,7 @@ const database = require('../lib/database.js');
 const arabicText = require('../arabic-text.json');
 const filePath = "D:\\gitProjects\\showBot\\bin\\movies.txt";
 
-add(showDataExtractor.getJsonFromTxtFile(filePath));
+//add(showDataExtractor.getJsonFromTxtFile(filePath));
 
 //dropDb();
 
