@@ -27,7 +27,6 @@ describe('MessageBuilder', function() {
 			return messageBuilder.getQuickReplyResponse(state, 123)
 				.then(msg => {
 					(() => okGenericTemplateStructureTest(msg)).should.not.throw();
-					//console.log(JSON.stringify(msg, null, 2));
 				});
 		});
 		it('should return a correct quick-reply strucutre', function() {
@@ -48,7 +47,7 @@ describe('MessageBuilder', function() {
 		it('should return a correct button template strucutre', function() {
 			let msg = messageBuilder.getMoreInfoResponse(123, "This movie is about bla bla...");
 			(() => okButtonTemplateStructureTest(msg)).should.not.throw();
-
+			//console.log(JSON.stringify(msg, null, 2));
 			msg = messageBuilder.getMoreInfoResponse(123, "");
 			(() => okButtonTemplateStructureTest(msg)).should.throw();	
 		});
