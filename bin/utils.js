@@ -5,9 +5,11 @@ const arabicText = require('../arabic-text.json');
 const filePath = "D:\\gitProjects\\showBot\\bin\\movies.txt";
 const maxShowNum = 19;
 
-add(showDataExtractor.getJsonFromTxtFile(filePath));
+//add(showDataExtractor.getJsonFromTxtFile(filePath));
 
 //dropDb();
+
+cursorTest();
 
 function add(shows) {
 	const movie = "movie";
@@ -31,6 +33,18 @@ function dropDb() {
 
 		})
 		.catch((err) => console.log("Error: " + err));
+}
+
+function cursorTest(){
+	database.init().then(() => {
+		const movies = database.getDb().collection("foreign movies");
+		var cursor = movies.find({});
+
+		cursor.nextObject(function(err, item) {
+			console.log(cursor);
+		});
+	})
+	.catch((err) => console.log(err));
 }
 
 function findInDb(genre) {

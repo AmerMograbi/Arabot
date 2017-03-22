@@ -3,35 +3,32 @@
 const messageBuilder = require('../lib/message-builder.js');
 const assert = require('assert');
 const should = require('should');
+const rewire = require('rewire');
+const rewiredMessageBuilder = rewire('../lib/message-builder.js');
+const buildState = rewiredMessageBuilder.__get__('buildState');
+const buildStep = rewiredMessageBuilder.__get__('buildStep');
 
 const foreignMovies = "foreign movies";
-const delimiter = messageBuilder.getDelimiter();
-const keyValDelimiter = messageBuilder.getkeyValDelimiter();
-
 
 describe('MessageBuilder', function() {
 
 	describe('#getQuickReplyResponse()', function() {
-		it('should throw an exception when using a wrong delimiter', function() {
-			(() => messageBuilder.getQuickReplyResponse("showTypes-foreign movies", 123)).should.throw();
-		});
-		it('should throw on bad payload input', function() {
-			(() => messageBuilder.getQuickReplyResponse("adgsasgasdga", 123)).should.throw();
-			(() => messageBuilder.getQuickReplyResponse("", 123)).should.throw();
-			(() => messageBuilder.getQuickReplyResponse(foreignMovies, 123)).should.throw();
-			(() => messageBuilder.getQuickReplyResponse("showTypes" + keyValDelimiter + foreignMovies, "")).should.throw();
-			(() => messageBuilder.getQuickReplyResponse("showTypes" + keyValDelimiter + foreignMovies, undefined)).should.throw();
-		});
 		it('should return a correct generic template strucutre', function() {
-			const state = "showTypes" + keyValDelimiter + foreignMovies + delimiter + "genres" + keyValDelimiter + "Action";
-			return messageBuilder.getQuickReplyResponse(state, 123)
+			let state = buildState("showTypes", foreignMovies);
+			state.push(buildStep("genres", "Action"));
+			const payload = {
+				state: state
+			};
+			return messageBuilder.getQuickReplyResponse(payload, 123)
 				.then(msg => {
 					(() => okGenericTemplateStructureTest(msg)).should.not.throw();
 				});
 		});
 		it('should return a correct quick-reply strucutre', function() {
-			const state = "showTypes" + keyValDelimiter + foreignMovies;
-			const msg = messageBuilder.getQuickReplyResponse(state, 123);
+			const payload = {
+				state: buildState("showTypes", foreignMovies)
+			};
+			const msg = messageBuilder.getQuickReplyResponse(payload, 123);
 			(() => okQuickReplyStructureTest(msg)).should.not.throw();
 		});
 	});
@@ -58,7 +55,6 @@ describe('MessageBuilder', function() {
 
 
 const okQuickReplyStructureTest = function(msg) {
-	const delimiter = messageBuilder.getDelimiter();
 	hasRecepient(msg);
 
 	//check if the message has text
@@ -73,17 +69,18 @@ const okQuickReplyStructureTest = function(msg) {
 	for (let quickReply of msg.message.quick_replies) {
 		assert.ok(quickReply.title);
 		assert.ok(quickReply.payload);
-		const payloadArray = quickReply.payload.split(delimiter);
-		payloadArray.map(okStepStructure);
+		assert.ok(quickReply.payload.state);
+		//const payloadArray = quickReply.payload.split(delimiter);
+		//payloadArray.map(okStepStructure);
 	}
 };
 
 //checks if a step in the payload is ok
-const okStepStructure = function(step) {
-	const keyValDelimiter = messageBuilder.getkeyValDelimiter();
-	const stepArray = step.split(keyValDelimiter);
-	assert.ok(stepArray[0] && stepArray[1]);
-};
+// const okStepStructure = function(step) {
+// 	const keyValDelimiter = messageBuilder.getkeyValDelimiter();
+// 	const stepArray = step.split(keyValDelimiter);
+// 	assert.ok(stepArray[0] && stepArray[1]);
+// };
 
 const okGenericTemplateStructureTest = function(msg) {
 	hasRecepient(msg);

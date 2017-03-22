@@ -6,10 +6,11 @@ const fbMessenger = require('../lib/fb-messenger');
 const should = require('should');
 const messageBuilderTest = require('./message-builder-test.js');
 const messageBuilder = require('../lib/message-builder.js');
+const rewire = require('rewire');
 
-const keyValDelimiter = messageBuilder.getkeyValDelimiter();
-const delimiter = messageBuilder.getDelimiter();
-
+const rewiredMessageBuilder = rewire('../lib/message-builder.js');
+const buildState = rewiredMessageBuilder.__get__('buildState');
+const buildStep = rewiredMessageBuilder.__get__('buildStep');
 
 describe('FbMessenger', function() {
 	describe('#ChatBot conversation', function() {
@@ -20,11 +21,12 @@ describe('FbMessenger', function() {
 		});
 		it('should send a good quick-reply on showType choose ', function() {
 			const messageToSendBack = fbMessenger.receivedMessage(quickReplyEventShowType);
+			//console.log(JSON.stringify(messageToSendBack, null, 2));
 			messageBuilderTest.okQuickReplyStructureTest(messageToSendBack);
+
 		});
 		it('should send a good generic template on genre choose', function() {
 			//just in order to simulate a user picking a show type
-			fbMessenger.receivedMessage(quickReplyEventShowType);
 			const messageToSendBack = fbMessenger.receivedMessage(quickReplyEventGenre);
 			return messageToSendBack
 				.then(msg => {
@@ -33,7 +35,7 @@ describe('FbMessenger', function() {
 		});
 		it('should send a good button template on "moreInfo"', function() {
 			const msg = fbMessenger.receivedPostback(moreInfoPostBackEvent);
-			(() => messageBuilderTest.okButtonTemplateStructureTest(msg)).should.not.throw();	
+			(() => messageBuilderTest.okButtonTemplateStructureTest(msg)).should.not.throw();
 		});
 		it('should not throw if user sends a text message with no handler', function() {
 			const messageToSendBack = fbMessenger.receivedMessage(textMessageEvent);
@@ -41,10 +43,13 @@ describe('FbMessenger', function() {
 	});
 });
 
+
 const quickReplyEventShowType = {
 	message: {
 		quick_reply: {
-			payload: "showTypes" +keyValDelimiter+ "foreign movies"
+			payload: {
+				state: buildState("showTypes", "foreign movies")
+			}
 		},
 		text: "hello"
 	},
@@ -57,10 +62,15 @@ const quickReplyEventShowType = {
 	timestamp: "789"
 };
 
+
+let state = buildState("showTypes", "foreign movies");
+state.push(buildStep("genres", "Action"));
 const quickReplyEventGenre = {
 	message: {
 		quick_reply: {
-			payload: "showTypes" +keyValDelimiter+ "foreign movies" +delimiter+ "genres" +keyValDelimiter+ "Action"
+			payload: {
+				state: state
+			}
 		},
 		text: "hello"
 	},
@@ -101,7 +111,9 @@ const textMessageEvent = {
 
 const moreInfoPostBackEvent = {
 	postback: {
-		payload: "moreInfo" + keyValDelimiter + "This movie is about bla bla...",
+		payload: {
+			moreInfo: "This movie is about bla bla..."
+		},
 	},
 	sender: {
 		id: "123"

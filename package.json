@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "test": "mocha"
   },
   "dependencies": {
     "body-parser": "~1.16.0",
@@ -14,6 +14,7 @@
     "express-x-hub": "^1.0.4",
     "mongodb": "^2.2.24",
     "morgan": "~1.7.0",
+    "node-cache": "^4.1.1",
     "request": "^2.79.0",
     "serve-favicon": "~2.3.2"
   },
@@ -24,8 +25,5 @@
   "description": "An arabic facebook messenger chatbot for shows.",
   "engines": {
     "node": "6.10.0"
-  },
-  "scripts": {
-    "test": "mocha"
   }
 }
