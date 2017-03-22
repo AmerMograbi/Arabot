@@ -69,9 +69,8 @@ const okQuickReplyStructureTest = function(msg) {
 	for (let quickReply of msg.message.quick_replies) {
 		assert.ok(quickReply.title);
 		assert.ok(quickReply.payload);
-		assert.ok(quickReply.payload.state);
-		//const payloadArray = quickReply.payload.split(delimiter);
-		//payloadArray.map(okStepStructure);
+		const payload = JSON.parse(quickReply.payload);
+		assert.ok(payload.state);
 	}
 };
 

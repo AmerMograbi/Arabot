@@ -21,7 +21,6 @@ describe('FbMessenger', function() {
 		});
 		it('should send a good quick-reply on showType choose ', function() {
 			const messageToSendBack = fbMessenger.receivedMessage(quickReplyEventShowType);
-			//console.log(JSON.stringify(messageToSendBack, null, 2));
 			messageBuilderTest.okQuickReplyStructureTest(messageToSendBack);
 
 		});
@@ -43,13 +42,14 @@ describe('FbMessenger', function() {
 	});
 });
 
+let ShowTypePayload = {
+	state: buildState("showTypes", "foreign movies")
+};
 
 const quickReplyEventShowType = {
 	message: {
 		quick_reply: {
-			payload: {
-				state: buildState("showTypes", "foreign movies")
-			}
+			payload: JSON.stringify(ShowTypePayload)
 		},
 		text: "hello"
 	},
@@ -65,12 +65,14 @@ const quickReplyEventShowType = {
 
 let state = buildState("showTypes", "foreign movies");
 state.push(buildStep("genres", "Action"));
+const payload = {
+	state: state
+};
+
 const quickReplyEventGenre = {
 	message: {
 		quick_reply: {
-			payload: {
-				state: state
-			}
+			payload: JSON.stringify(payload)
 		},
 		text: "hello"
 	},
@@ -83,9 +85,10 @@ const quickReplyEventGenre = {
 	timestamp: "789"
 };
 
+
 const gettingStartedPostBackEvent = {
 	postback: {
-		payload: "GETTING_STARTED",
+		payload: '{"gettingStarted": ""}'
 	},
 	sender: {
 		id: "123"
@@ -111,9 +114,7 @@ const textMessageEvent = {
 
 const moreInfoPostBackEvent = {
 	postback: {
-		payload: {
-			moreInfo: "This movie is about bla bla..."
-		},
+		payload: '{"moreInfo": "This movie is about bla bla..."}'
 	},
 	sender: {
 		id: "123"
