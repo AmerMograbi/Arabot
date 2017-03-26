@@ -13,6 +13,7 @@ const rewiredMessageBuilder = rewire('../lib/message-builder.js');
 const buildState = rewiredMessageBuilder.__get__('buildState');
 const buildStep = rewiredMessageBuilder.__get__('buildStep');
 const buildWillWatchPayload = rewiredMessageBuilder.__get__('buildWillWatchPayload');
+const buildNextShowPayload = rewiredMessageBuilder.__get__('buildNextShowPayload');
 
 const foreignMovies = "foreignMovies";
 
@@ -47,6 +48,14 @@ describe('FbMessenger', function() {
 			//console.log(JSON.stringify(msg, null, 2));
 			(() => messageBuilderTest.okQuickReplyStructureTest(msg)).should.not.throw();
 		});
+		it('should send the next show on "nextShow"', function() {
+			const messageToSendBack = fbMessenger.receivedPostback(NextShowPostBackEvent);
+			return messageToSendBack
+					.then(msg => {
+					//console.log(JSON.stringify(msg, null, 2));
+					(() => messageBuilderTest.okGenericTemplateStructureTest(msg)).should.not.throw();
+				})
+		});
 		it('should send a good quick-reply message on "startOver"', function() {
 			const messageToSendBack = fbMessenger.receivedMessage(quickReplyEventstartOver);
 			messageBuilderTest.okQuickReplyStructureTest(messageToSendBack);
@@ -61,6 +70,7 @@ let ShowTypePayload = {
 	state: buildState("showTypes", foreignMovies)
 };
 
+//create a builder function for these!!!!!!!
 const quickReplyEventShowType = {
 	message: {
 		quick_reply: {
@@ -161,7 +171,7 @@ const moreInfoPostBackEvent = {
 };
 
 
-const willWatchPayload = buildWillWatchPayload("123", "456", foreignMovies, "Action");
+const willWatchPayload = buildWillWatchPayload("474574", foreignMovies, "Action");
 const willWatchPostBackEvent = {
 	postback: {
 		payload: JSON.stringify(willWatchPayload)
@@ -174,3 +184,18 @@ const willWatchPostBackEvent = {
 	},
 	timestamp: "789"
 };
+
+const NextShowPayload = buildNextShowPayload(foreignMovies, "Children");
+const NextShowPostBackEvent = {
+	postback: {
+		payload: JSON.stringify(NextShowPayload)
+	},
+	sender: {
+		id: "123"
+	},
+	recipient: {
+		id: "456"
+	},
+	timestamp: "789"
+};
+
