@@ -8,7 +8,7 @@ const rewiredMessageBuilder = rewire('../lib/message-builder.js');
 const buildState = rewiredMessageBuilder.__get__('buildState');
 const buildStep = rewiredMessageBuilder.__get__('buildStep');
 
-const foreignMovies = "foreign movies";
+const foreignMovies = "foreignMovies";
 
 describe('MessageBuilder', function() {
 
@@ -56,10 +56,7 @@ describe('MessageBuilder', function() {
 
 const okQuickReplyStructureTest = function(msg) {
 	hasRecepient(msg);
-
-	//check if the message has text
-	assert.ok(msg.message);
-	assert.ok(msg.message.text);
+	hasText(msg);
 
 	//check if quick_replies isn't an empty list
 	assert.ok(msg.message.quick_replies);
@@ -136,10 +133,22 @@ function isTemplate(attachment) {
 	assert.ok(attachment.payload);
 }
 
+function hasText(msg){
+	//check if the message has text
+	assert.ok(msg.message);
+	assert.ok(msg.message.text);
+}
+
+function okTextMessageStructureTest(msg){
+	hasRecepient(msg);
+	hasText(msg);
+}
+
 
 
 module.exports = {
 	okQuickReplyStructureTest: okQuickReplyStructureTest,
 	okGenericTemplateStructureTest: okGenericTemplateStructureTest,
-	okButtonTemplateStructureTest: okButtonTemplateStructureTest
+	okButtonTemplateStructureTest: okButtonTemplateStructureTest,
+	okTextMessageStructureTest: okTextMessageStructureTest
 };

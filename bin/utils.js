@@ -4,75 +4,86 @@ const database = require('../lib/database.js');
 const arabicText = require('../arabic-text.json');
 const filePath = "D:\\gitProjects\\showBot\\bin\\movies.txt";
 const maxShowNum = 19;
+const foreignMovies = "foreignMovies";
 
-//add(showDataExtractor.getJsonFromTxtFile(filePath));
 
-//dropDb();
+run();
 
-cursorTest();
 
-function add(shows) {
-	const movie = "movie";
+function run(){
+	database.init(process.env.MONGODB_LOCAL_URI).then(() => {
+		//add(showDataExtractor.getJsonFromTxtFile(filePath), foreignMovies, "movie");
+		//dropDb();
+
+		//addToWatchedTest();
+		//findInDb();		
+	})
+	.catch((err) => console.log(err));
 	
+}
+
+function add(shows, showType, tmdbShowType) {
 	console.log("adding...");
-	showDataExtractor.addMoreDataFromApi(shows.slice(0, maxShowNum), movie)
-		.then(showsWithMoreData => addToDb(showsWithMoreData, shows))//console.log(showsWithMoreData))
+	showDataExtractor.addMoreDataFromApi(shows.slice(0, maxShowNum), tmdbShowType)
+		.then(showsWithMoreData => addToDb(showsWithMoreData, shows, showType, tmdbShowType))//console.log(showsWithMoreData))
 		.catch((err) => console.log(err));
 }
 
 
 function dropDb() {
-	database.init().then(() => {
-			database.getDb().dropDatabase(function(err, res) {
-				if (err) {
-					console.log("Error: " + err);
-				} else {
-					console.log("db droped with res: " + res);
-				}
-			});
-
-		})
-		.catch((err) => console.log("Error: " + err));
+	database.getDb().dropDatabase(function(err, res) {
+		if (err) {
+			console.log("Error: " + err);
+		} else {
+			console.log("db droped with res: " + res);
+		}
+	});
 }
 
-function cursorTest(){
-	database.init().then(() => {
-		const movies = database.getDb().collection("foreign movies");
-		var cursor = movies.find({});
+function cursorTest(showType){
+	const movies = database.getDb().collection(showType);
+	var cursor = movies.find({});
 
-		cursor.nextObject(function(err, item) {
-			console.log(cursor);
-		});
-	})
-	.catch((err) => console.log(err));
+	cursor.nextObject(function(err, item) {
+		console.log(cursor);
+	});
 }
 
-function findInDb(genre) {
-	database.init().then(() => {
-			database.findByGenre("foreign movies", genre)
-				.then(res => console.log(JSON.stringify(res, null, 2) + " length: " + res.length));
-		})
-		.catch((err) => console.log(err));
+function findInDb(genre, showType) {
+	const users = database.getDb().collection("users");
+	const mongoUserId = "58d7762acb2c9f12b413284e";
+	users.find({"_id": new database.ObjectId(mongoUserId)}).toArray(function(err, res){
+		if(err) throw new Error(err);
+		console.log(JSON.stringify(res, null, 2));
+	});
+
 }
 
 
-function addToDb(showsWithMoreData, shows) {
-	database.init().then(() => {
-			database.insert("foreign movies", showsWithMoreData)
+function addToWatchedTest(){
+	database.addToWatchedList(456, 1775, foreignMovies)
+	.then(res => console.log(res))
+	.catch(e => console.log(e));
+}
+
+
+function addToDb(showsWithMoreData, shows, showType, tmdbShowType) {
+	
+			database.addShow(showType, showsWithMoreData)
 				.then(res => {
 					console.log("added " + res.result.n + " objects successfully.");
 					shows.splice(0, maxShowNum);
 					console.log("Number of shows remaining: " + shows.length);
 					if (shows.length > 0) {
-						setTimeout(()=>add(shows), 13000);
+						setTimeout(()=>add(shows, showType, tmdbShowType), 13000);
 						console.log("waiting 13 seconds...");
 					}else{
 						console.log("All Done!");
 					}
 
 				});
-		})
-		.catch((err) => console.log(err));
+
+		
 }
 
 

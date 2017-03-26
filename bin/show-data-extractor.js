@@ -14,11 +14,10 @@ module.exports = {
 		return shows;
 	},
 
-	//showType={movie, tv}
-	addMoreDataFromApi: function(myShows, showType) {
+	//tmdbShowType={movie, tv}
+	addMoreDataFromApi: function(myShows, tmdbShowType) {
 		return Promise.all(
-			myShows.map(show => addUrlToshow(show, showType))
-			.map(addData));
+			myShows.map(show => addData(show, getShowUrl(show.name, tmdbShowType), tmdbShowType)));
 	}
 };
 
@@ -58,13 +57,10 @@ function addMatchedToArray(match, nameAndGenres, description, shows) {
 
 
 
-function addUrlToshow(show, showType) {
-	const showName = show.name;
-	let url = "https://api.themoviedb.org/3/search/" + showType;
+function getShowUrl(showName, tmdbShowType) {
+	let url = "https://api.themoviedb.org/3/search/" + tmdbShowType;
 	url += "?api_key=" + process.env.TMDB_API_KEY + "&query=" + showName.replace(/\s/g, '+');
-	show.url = url;
-	show.type = showType;
-	return show;
+	return url;
 }
 
 function getJson(url) {
@@ -76,7 +72,7 @@ function getJson(url) {
 			if (!error && response.statusCode == 200) {
 				resolve(body);
 			} else {
-				reject(new Error("Failed with response status code: " + response.statusCode));
+				reject(new Error("Failed getJson on url: " + url + " statusCode: " + response.statusCode));
 			}
 
 		});
@@ -84,19 +80,16 @@ function getJson(url) {
 }
 
 
-function addData(show) {
+function addData(show, url, tmdbShowType) {
 	return new Promise((resolve, reject) => {
-		getJson(show.url).then(body => {
+		getJson(url).then(body => {
 			const firstResult = body.results[0];
 			if (firstResult) {
 				show.tmdbId = firstResult.id;
 				show.releaseDate = firstResult.release_date;
 				show.imageUrl = firstResult.backdrop_path;
-				getTrailerKey(firstResult.id, show.type).then(trailerKey => {
+				getTrailerKey(firstResult.id, tmdbShowType).then(trailerKey => {
 					show.trailerKey = trailerKey;
-					//omg remove the below deletes when you can!!!
-					delete show.url; 
-					delete show.type;
 					resolve(show);
 				});
 			} else {
@@ -106,9 +99,9 @@ function addData(show) {
 	});
 }
 
-function getTrailerKey(showId, showType){
+function getTrailerKey(showId, tmdbShowType){
 	return new Promise((resolve, reject) => {
-		let url = "https://api.themoviedb.org/3/" + showType + "/" + showId ;
+		let url = "https://api.themoviedb.org/3/" + tmdbShowType + "/" + showId ;
 		url += "?api_key=" + process.env.TMDB_API_KEY + "&append_to_response=videos";
 
 		getJson(url).then(body => {
@@ -118,35 +111,4 @@ function getTrailerKey(showId, showType){
 				console.log(new Error("Couldn't find trailer for " + showId));
 		});
 	});
-}
-
-
-function getJsonAndAddData(show) {
-	return new Promise((resolve, reject) => {
-		request({
-			url: show.url,
-			json: true
-		}, function(error, response, body) {
-
-			if (!error && response.statusCode == 200) {
-				const firstResult = body.results[0];
-				if (firstResult) {
-					show.tmdbId = firstResult.id;
-					show.releaseDate = firstResult.release_date;
-					show.imageUrl = firstResult.backdrop_path;
-					delete show.url;
-					resolve(show);
-				} else {
-					console.log("Couldn't find " + show.name);
-				}
-
-			} else {
-				let errStr = "Failed with error: " + error + ". response status code: " + response.statusCode;
-				errStr += ". url: " + show.url;
-				reject(new Error(errStr));
-			}
-
-		});
-	});
-
 }

@@ -19,11 +19,10 @@ app.use(xhub({
 }));
 app.use(bodyParser.json());
 
-database.init().then(() => {
+database.init(process.env.MONGODB_URI).then(() => {
     console.log("Successfully connected to the database.");
-  })
-  .catch(err => {
-    throw new Error("Cannot connect to the database.");
+  }).catch(err => {
+    throw new Error("Cannot connect to the database. err: " + err);
   });
 
 

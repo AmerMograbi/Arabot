@@ -22,8 +22,7 @@ fs.readdirSync(testDir).filter(function(file) {
 });
 
 
-
-database.init().then(() => {
+database.init(process.env.MONGODB_LOCAL_URI).then(() => {
 		mocha.run(function(failures) {
 			process.on('exit', function() {
 				process.exit(failures);
@@ -31,5 +30,3 @@ database.init().then(() => {
 		});
 	})
 	.catch(e => console.log("Something went wrong with err: " + e));
-
-// Run the tests.
