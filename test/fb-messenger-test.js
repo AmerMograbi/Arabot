@@ -108,7 +108,7 @@ const quickReplyEventstartOver = {
 
 
 let state = buildState("showTypes", foreignMovies);
-state.push(buildStep("genres", "Action"));
+state.push(buildStep("genres", "Horror"));
 const payload = {
 	state: state
 };
