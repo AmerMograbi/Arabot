@@ -44,8 +44,7 @@ describe('FbMessenger', function() {
 		it('should send a good quick-reply message on "willWatch"', function() {
 			const msg = fbMessenger.receivedPostback(willWatchPostBackEvent);
 			//clean up after ourselves
-			database.dropCollection("users");
-			//console.log(JSON.stringify(msg, null, 2));
+			//database.dropCollection("users");
 			(() => messageBuilderTest.okQuickReplyStructureTest(msg)).should.not.throw();
 		});
 		it('should send the next show on "nextShow"', function() {
@@ -54,7 +53,7 @@ describe('FbMessenger', function() {
 					.then(msg => {
 					//console.log(JSON.stringify(msg, null, 2));
 					(() => messageBuilderTest.okGenericTemplateStructureTest(msg)).should.not.throw();
-				})
+				});
 		});
 		it('should send a good quick-reply message on "startOver"', function() {
 			const messageToSendBack = fbMessenger.receivedMessage(quickReplyEventstartOver);
@@ -109,7 +108,7 @@ const quickReplyEventstartOver = {
 
 
 let state = buildState("showTypes", foreignMovies);
-state.push(buildStep("genres", "Action"));
+state.push(buildStep("genres", "Children"));
 const payload = {
 	state: state
 };
@@ -171,7 +170,7 @@ const moreInfoPostBackEvent = {
 };
 
 
-const willWatchPayload = buildWillWatchPayload("474574", foreignMovies, "Action");
+const willWatchPayload = buildWillWatchPayload("58d7803f0a6747036c7d5ee6", foreignMovies, "Children");
 const willWatchPostBackEvent = {
 	postback: {
 		payload: JSON.stringify(willWatchPayload)

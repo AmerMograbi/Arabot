@@ -19,7 +19,7 @@ describe('MessageBuilder', function() {
 			const payload = {
 				state: state
 			};
-			return messageBuilder.getQuickReplyResponse(payload, 123)
+			return messageBuilder.getQuickReplyResponse(payload, "5523634634578")
 				.then(msg => {
 					(() => okGenericTemplateStructureTest(msg)).should.not.throw();
 				});
@@ -28,24 +28,24 @@ describe('MessageBuilder', function() {
 			const payload = {
 				state: buildState("showTypes", foreignMovies)
 			};
-			const msg = messageBuilder.getQuickReplyResponse(payload, 123);
+			const msg = messageBuilder.getQuickReplyResponse(payload, "123");
 			(() => okQuickReplyStructureTest(msg)).should.not.throw();
 		});
 	});
 
 	describe('#getGettingStartedResponse()', function() {
 		it('should return a correct message strucutre', function() {
-			const msg = messageBuilder.getGettingStartedResponse(123);
+			const msg = messageBuilder.getGettingStartedResponse("123");
 			(() => okQuickReplyStructureTest(msg)).should.not.throw();
 		});
 	});
 
 	describe('#getMoreInfoResponse()', function() {
 		it('should return a correct button template strucutre', function() {
-			let msg = messageBuilder.getMoreInfoResponse(123, "This movie is about bla bla...");
+			let msg = messageBuilder.getMoreInfoResponse("123", "This movie is about bla bla...");
 			(() => okButtonTemplateStructureTest(msg)).should.not.throw();
 			//console.log(JSON.stringify(msg, null, 2));
-			msg = messageBuilder.getMoreInfoResponse(123, "");
+			msg = messageBuilder.getMoreInfoResponse("123", "");
 			(() => okButtonTemplateStructureTest(msg)).should.throw();	
 		});
 	});
@@ -70,13 +70,6 @@ const okQuickReplyStructureTest = function(msg) {
 		assert.ok(payload.state, "There is no state attribute for quickReply's payload");
 	}
 };
-
-//checks if a step in the payload is ok
-// const okStepStructure = function(step) {
-// 	const keyValDelimiter = messageBuilder.getkeyValDelimiter();
-// 	const stepArray = step.split(keyValDelimiter);
-// 	assert.ok(stepArray[0] && stepArray[1]);
-// };
 
 const okGenericTemplateStructureTest = function(msg) {
 	hasRecepient(msg);
