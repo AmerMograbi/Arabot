@@ -14,9 +14,9 @@ function run() {
 	database.init(process.env.MONGODB_LOCAL_URI).then(() => {
 			//add(showDataExtractor.getJsonFromTxtFile(filePath), foreignMovies, "movie");
 			//dropDb();
-			//addToWatchedTest();
+			addToWatchedTest();
 			//findInDb();		
-			findUser("456");
+			//findUser("456");
 			//database.dropCollection("users").then(res => console.log("collection dropped. res:" + res));
 		})
 		.catch((err) => console.log(err));
@@ -74,12 +74,12 @@ function findUser(userId) {
 
 
 function addToWatchedTest() {
-	database.addToWatchedList("456", 4575, foreignMovies, "Action");
-	database.addToWatchedList("456", 68853, foreignMovies, "Comedy");
-	database.addToWatchedList("456", 3523, "turkishSeries", "Drama");
-	database.addToWatchedList("456", 125415, "turkishSeries", "Drama");
-	database.addToWatchedList("456", 125415, "turkishSeries", "Adventure");
-}
+	database.addToWatchedList("123", 6236262, foreignMovies, "Action");
+// 	database.addToWatchedList("456", "68853", foreignMovies, "Comedy");
+// 	database.addToWatchedList("456", "3523", "turkishSeries", "Drama");
+// 	database.addToWatchedList("456", "125415", "turkishSeries", "Drama");
+// 	database.addToWatchedList("456", "125415", "turkishSeries", "Adventure");
+ }
 
 
 function addToDb(showsWithMoreData, shows, showType, tmdbShowType) {

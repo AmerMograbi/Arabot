@@ -33,7 +33,7 @@ describe('FbMessenger', function() {
 			const messageToSendBack = fbMessenger.receivedMessage(quickReplyEventGenre);
 			return messageToSendBack
 				.then(msg => {
-					//console.log(JSON.stringify(msg, null, 2));
+					console.log(JSON.stringify(msg, null, 2));
 					(() => messageBuilderTest.okGenericTemplateStructureTest(msg)).should.not.throw();
 				});
 		});
@@ -44,7 +44,7 @@ describe('FbMessenger', function() {
 		it('should send a good quick-reply message on "willWatch"', function() {
 			const msg = fbMessenger.receivedPostback(willWatchPostBackEvent);
 			//clean up after ourselves
-			//database.dropCollection("users");
+			database.dropCollection("users");
 			(() => messageBuilderTest.okQuickReplyStructureTest(msg)).should.not.throw();
 		});
 		it('should send the next show on "nextShow"', function() {
@@ -108,7 +108,7 @@ const quickReplyEventstartOver = {
 
 
 let state = buildState("showTypes", foreignMovies);
-state.push(buildStep("genres", "Children"));
+state.push(buildStep("genres", "Action"));
 const payload = {
 	state: state
 };
