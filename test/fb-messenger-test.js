@@ -39,13 +39,16 @@ describe('FbMessenger', function() {
 			const msg = fbMessenger.receivedPostback(moreInfoPostBackEvent);
 			(() => messageBuilderTest.okButtonTemplateStructureTest(msg)).should.not.throw();
 		});
-		it('should send a good text message on "willWatch"', function() {
+		it('should send a good quick-reply message on "willWatch"', function() {
 			const msg = fbMessenger.receivedPostback(willWatchPostBackEvent);
 			//clean up after ourselves
 			database.dropCollection("users");
 			//console.log(JSON.stringify(msg, null, 2));
 			(() => messageBuilderTest.okQuickReplyStructureTest(msg)).should.not.throw();
-
+		});
+		it('should send a good quick-reply message on "startOver"', function() {
+			const messageToSendBack = fbMessenger.receivedMessage(quickReplyEventstartOver);
+			messageBuilderTest.okQuickReplyStructureTest(messageToSendBack);
 		});
 		it('should not throw if user sends a text message with no handler', function() {
 			const messageToSendBack = fbMessenger.receivedMessage(textMessageEvent);
@@ -61,6 +64,26 @@ const quickReplyEventShowType = {
 	message: {
 		quick_reply: {
 			payload: JSON.stringify(ShowTypePayload)
+		},
+		text: "hello"
+	},
+	sender: {
+		id: "123"
+	},
+	recipient: {
+		id: "456"
+	},
+	timestamp: "789"
+};
+
+let startOverPayload = {
+	state: buildState("willWatchResponse", "startOver")
+};
+
+const quickReplyEventstartOver = {
+	message: {
+		quick_reply: {
+			payload: JSON.stringify(startOverPayload)
 		},
 		text: "hello"
 	},
