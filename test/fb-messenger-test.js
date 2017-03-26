@@ -32,6 +32,7 @@ describe('FbMessenger', function() {
 			const messageToSendBack = fbMessenger.receivedMessage(quickReplyEventGenre);
 			return messageToSendBack
 				.then(msg => {
+					//console.log(JSON.stringify(msg, null, 2));
 					(() => messageBuilderTest.okGenericTemplateStructureTest(msg)).should.not.throw();
 				});
 		});
@@ -50,7 +51,7 @@ describe('FbMessenger', function() {
 			const messageToSendBack = fbMessenger.receivedMessage(quickReplyEventstartOver);
 			messageBuilderTest.okQuickReplyStructureTest(messageToSendBack);
 		});
-		it('should not throw if user sends a text message with no handler', function() {
+		it('should not throw if user sends a message with no handler', function() {
 			const messageToSendBack = fbMessenger.receivedMessage(textMessageEvent);
 		});
 	});
@@ -160,7 +161,7 @@ const moreInfoPostBackEvent = {
 };
 
 
-const willWatchPayload = buildWillWatchPayload("123", "456", foreignMovies);
+const willWatchPayload = buildWillWatchPayload("123", "456", foreignMovies, "Action");
 const willWatchPostBackEvent = {
 	postback: {
 		payload: JSON.stringify(willWatchPayload)
