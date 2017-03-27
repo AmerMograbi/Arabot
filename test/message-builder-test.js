@@ -42,11 +42,10 @@ describe('MessageBuilder', function() {
 
 	describe('#getMoreInfoResponse()', function() {
 		it('should return a correct button template strucutre', function() {
-			let msg = messageBuilder.getMoreInfoResponse("123", "This movie is about bla bla...");
-			(() => okButtonTemplateStructureTest(msg)).should.not.throw();
+			let msg = messageBuilder.getMoreInfoResponse("123", "This movie is about bla bla...", "1242141", foreignMovies, "Action");
+			(() => okQuickReplyStructureTest(msg)).should.not.throw();
 			//console.log(JSON.stringify(msg, null, 2));
-			msg = messageBuilder.getMoreInfoResponse("123", "");
-			(() => okButtonTemplateStructureTest(msg)).should.throw();	
+			(() => messageBuilder.getMoreInfoResponse("123", "", "1242141", foreignMovies, "Action")).should.throw();
 		});
 	});
 

@@ -15,14 +15,14 @@ describe('Cache', function() {
 		it('should insert shows and then retrieve the first', function() {
 			cache.getNextShow("123", foreignMovies, "Fantasy")
 				.then(s => {
-					console.log("next show is " + s.name);
+					//console.log("next show is " + s.name);
 					cache.getNextShow("123", foreignMovies, "Fantasy")
 					.then( s => {
-						console.log("next show is " + s.name);
+						//console.log("next show is " + s.name);
 						cache.getNextShow("123", foreignMovies, "Fantasy")
 						.then(s => {
-							console.log("next show is " + s.name);
-							console.log("All Keys: " + JSON.stringify(cache.getAllKeys(), null, 2));
+							//console.log("next show is " + s.name);
+							//console.log("All Keys: " + JSON.stringify(cache.getAllKeys(), null, 2));
 						});
 					});
 				});

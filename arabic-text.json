@@ -22,6 +22,12 @@
 	"willWatchResponse":{
 		"startOver": "إبدأ من جديد"
 	},
+
+	"moreInfoResponse":{
+		"willWatch": "سأشاهده",
+		"nextShow": "التالي"		
+	},
+
 	"showButtons": {
 		"willWatch": "سأشاهده",
 		"moreInfo": "اقرأ المزيد",

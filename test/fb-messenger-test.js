@@ -14,6 +14,8 @@ const buildState = rewiredMessageBuilder.__get__('buildState');
 const buildStep = rewiredMessageBuilder.__get__('buildStep');
 const buildWillWatchPayload = rewiredMessageBuilder.__get__('buildWillWatchPayload');
 const buildNextShowPayload = rewiredMessageBuilder.__get__('buildNextShowPayload');
+const buildMoreInfoPayload = rewiredMessageBuilder.__get__('buildMoreInfoPayload');
+
 
 const foreignMovies = "foreignMovies";
 
@@ -33,27 +35,33 @@ describe('FbMessenger', function() {
 			const messageToSendBack = fbMessenger.receivedMessage(quickReplyEventGenre);
 			return messageToSendBack
 				.then(msg => {
-					console.log(JSON.stringify(msg, null, 2));
-					(() => messageBuilderTest.okGenericTemplateStructureTest(msg)).should.not.throw();
-				});
-		});
-		it('should send a good button template on "moreInfo"', function() {
-			const msg = fbMessenger.receivedPostback(moreInfoPostBackEvent);
-			(() => messageBuilderTest.okButtonTemplateStructureTest(msg)).should.not.throw();
-		});
-		it('should send a good quick-reply message on "willWatch"', function() {
-			const msg = fbMessenger.receivedPostback(willWatchPostBackEvent);
-			//clean up after ourselves
-			database.dropCollection("users");
-			(() => messageBuilderTest.okQuickReplyStructureTest(msg)).should.not.throw();
-		});
-		it('should send the next show on "nextShow"', function() {
-			const messageToSendBack = fbMessenger.receivedPostback(NextShowPostBackEvent);
-			return messageToSendBack
-					.then(msg => {
 					//console.log(JSON.stringify(msg, null, 2));
 					(() => messageBuilderTest.okGenericTemplateStructureTest(msg)).should.not.throw();
 				});
+		});
+		it('should send a good quick-reply on "moreInfo"', function() {
+			const msg = fbMessenger.receivedPostback(moreInfoPostBackEvent);
+			//console.log(JSON.stringify(msg, null, 2));
+			(() => messageBuilderTest.okQuickReplyStructureTest(msg)).should.not.throw();
+		});
+		it('should send a good quick-reply message on "willWatch"', function() {
+			//these two will add a duplicate entry in db's 'watched' list 
+			const p1 = fbMessenger.receivedPostback(willWatchPostBackEvent);
+			const p2 = fbMessenger.receivedMessage(willWatchMoreInfoQuickReplyEvent);
+			//clean up after ourselves
+			//database.dropCollection("users");
+			return Promise.all([p1,p2]).then(msgs => msgs.map(msg => {
+				messageBuilderTest.okQuickReplyStructureTest(msg);
+			}));
+		});
+		it('should send the next show on "nextShow"', function() {
+			const p1 = fbMessenger.receivedPostback(NextShowPostBackEvent);
+			const p2 = fbMessenger.receivedMessage(nextShowMoreInfoQuickReplyEvent);
+
+			return Promise.all([p1,p2]).then(msgs => msgs.map(msg => {
+				messageBuilderTest.okGenericTemplateStructureTest(msg);
+			}));
+
 		});
 		it('should send a good quick-reply message on "startOver"', function() {
 			const messageToSendBack = fbMessenger.receivedMessage(quickReplyEventstartOver);
@@ -69,6 +77,16 @@ let ShowTypePayload = {
 	state: buildState("showTypes", foreignMovies)
 };
 
+function initEvents(events){
+	events.map(e => addMockDataToEvent(e));
+}
+
+function addMockDataToEvent(event) {
+	event.sender = {id: "123"};
+	event.recipient = {id: "123"};
+	event.timestamp = "789";
+}
+
 //create a builder function for these!!!!!!!
 const quickReplyEventShowType = {
 	message: {
@@ -76,14 +94,7 @@ const quickReplyEventShowType = {
 			payload: JSON.stringify(ShowTypePayload)
 		},
 		text: "hello"
-	},
-	sender: {
-		id: "123"
-	},
-	recipient: {
-		id: "456"
-	},
-	timestamp: "789"
+	}
 };
 
 let startOverPayload = {
@@ -96,14 +107,7 @@ const quickReplyEventstartOver = {
 			payload: JSON.stringify(startOverPayload)
 		},
 		text: "hello"
-	},
-	sender: {
-		id: "123"
-	},
-	recipient: {
-		id: "456"
-	},
-	timestamp: "789"
+	}
 };
 
 
@@ -119,82 +123,78 @@ const quickReplyEventGenre = {
 			payload: JSON.stringify(payload)
 		},
 		text: "hello"
-	},
-	sender: {
-		id: "123"
-	},
-	recipient: {
-		id: "456"
-	},
-	timestamp: "789"
+	}
 };
 
 
 const gettingStartedPostBackEvent = {
 	postback: {
 		payload: '{"gettingStarted": ""}'
-	},
-	sender: {
-		id: "123"
-	},
-	recipient: {
-		id: "456"
-	},
-	timestamp: "789"
+	}
 };
 
 const textMessageEvent = {
 	message: {
 		text: "hello",
-	},
-	sender: {
-		id: "123"
-	},
-	recipient: {
-		id: "456"
-	},
-	timestamp: "789"
+	}
 };
 
+const moreInfoPayload = buildMoreInfoPayload("this movie is about bla bla...", "1242141", foreignMovies, "Action");
 const moreInfoPostBackEvent = {
 	postback: {
-		payload: '{"moreInfo": "This movie is about bla bla..."}'
-	},
-	sender: {
-		id: "123"
-	},
-	recipient: {
-		id: "456"
-	},
-	timestamp: "789"
+		payload: JSON.stringify(moreInfoPayload)
+	}
 };
+
 
 
 const willWatchPayload = buildWillWatchPayload("58d7803f0a6747036c7d5ee6", foreignMovies, "Children");
 const willWatchPostBackEvent = {
 	postback: {
 		payload: JSON.stringify(willWatchPayload)
-	},
-	sender: {
-		id: "123"
-	},
-	recipient: {
-		id: "456"
-	},
-	timestamp: "789"
+	}
 };
+
+const moreInfowillWatchPayload = {
+	state: buildState("moreInfoResponse", JSON.stringify(willWatchPayload))
+};
+//console.log(JSON.stringify(moreInfowillWatchPayload, null, 2));
+const willWatchMoreInfoQuickReplyEvent = {
+	message: {
+		quick_reply: {
+			payload: JSON.stringify(moreInfowillWatchPayload)
+		},
+		text: "desc of movie"
+	}	
+};
+
+
 
 const NextShowPayload = buildNextShowPayload(foreignMovies, "Children");
 const NextShowPostBackEvent = {
 	postback: {
 		payload: JSON.stringify(NextShowPayload)
-	},
-	sender: {
-		id: "123"
-	},
-	recipient: {
-		id: "456"
-	},
-	timestamp: "789"
+	}
 };
 
+const moreInfoNextShowPayload = {
+	state: buildState("moreInfoResponse", JSON.stringify(NextShowPayload))
+};
+const nextShowMoreInfoQuickReplyEvent = {
+	message: {
+		quick_reply: {
+			payload: JSON.stringify(moreInfoNextShowPayload)
+		},
+		text: "desc of movie"
+	}	
+};
+
+
+
+
+
+//change this so events are taken automatically..
+const events = [quickReplyEventShowType, NextShowPostBackEvent, willWatchPostBackEvent, moreInfoPostBackEvent,
+ textMessageEvent, gettingStartedPostBackEvent, quickReplyEventGenre, quickReplyEventstartOver, nextShowMoreInfoQuickReplyEvent,
+ willWatchMoreInfoQuickReplyEvent];
+initEvents(events);
