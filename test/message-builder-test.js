@@ -49,6 +49,12 @@ describe('MessageBuilder', function() {
 		});
 	});
 
+	describe('#getSenderActionResponse()', function() {
+		const msg = messageBuilder.getSenderActionResponse("123", "typing_on");
+		hasRecepient(msg);
+		assert.ok(msg.sender_action, "message should have sender_action attribute");
+	});
+
 });
 
 
