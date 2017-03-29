@@ -34,6 +34,11 @@
 		"nextShow": "التالي"
 	},
 
+	"noMoreShowsText": "لا يوجد المزيد من هذا النوع. حاول اختيار نوع أخر.",
+	"noMoreShows":{
+		"startOver": "إبدأ من جديد"
+	},	
+
 	"what to watch": "ما هو مزاجك الآن؟",
 	"what about thisMovie": "ما رأيك بهذا الفيلم؟",
 	"what about this series": "ما رأيك بهذا المسلسل؟"

@@ -32,12 +32,23 @@ describe('FbMessenger', function() {
 
 		});
 		it('should send a good generic template on genre choose', function() {
-			const messageToSendBack = fbMessenger.receivedMessage(quickReplyEventGenre);
+			const event = createGetShowEvent(foreignMovies, "Action");
+			const messageToSendBack = fbMessenger.receivedMessage(event);
 			return messageToSendBack
-				.then(msg => {
-					//console.log(JSON.stringify(msg, null, 2));
+				.then(msg => {	
 					(() => messageBuilderTest.okGenericTemplateStructureTest(msg)).should.not.throw();
 				});
+		});
+		it('should send a good quick-reply on noMoreShows event', function() {
+			let event = createGetShowEvent("A non-existant showtype", "A bad genre");
+			const p1 = fbMessenger.receivedMessage(event);
+
+			event = createGetShowEvent(foreignMovies, "A bad genre");
+			const p2 = fbMessenger.receivedMessage(event);
+
+			return Promise.all([p1,p2]).then(msgs => msgs.map(msg => {
+				messageBuilderTest.okQuickReplyStructureTest(msg);
+			}));
 		});
 		it('should send a good quick-reply on "moreInfo"', function() {
 			const msg = fbMessenger.receivedPostback(moreInfoPostBackEvent);
@@ -50,7 +61,7 @@ describe('FbMessenger', function() {
 			const p2 = fbMessenger.receivedMessage(willWatchMoreInfoQuickReplyEvent);
 			//clean up after ourselves
 			//database.dropCollection("users");
-			return Promise.all([p1,p2]).then(msgs => msgs.map(msg => {
+			return Promise.all([p1, p2]).then(msgs => msgs.map(msg => {
 				messageBuilderTest.okQuickReplyStructureTest(msg);
 			}));
 		});
@@ -58,7 +69,7 @@ describe('FbMessenger', function() {
 			const p1 = fbMessenger.receivedPostback(NextShowPostBackEvent);
 			const p2 = fbMessenger.receivedMessage(nextShowMoreInfoQuickReplyEvent);
 
-			return Promise.all([p1,p2]).then(msgs => msgs.map(msg => {
+			return Promise.all([p1, p2]).then(msgs => msgs.map(msg => {
 				messageBuilderTest.okGenericTemplateStructureTest(msg);
 			}));
 
@@ -77,14 +88,20 @@ let ShowTypePayload = {
 	state: buildState("showTypes", foreignMovies)
 };
 
-function initEvents(events){
+function initEvents(events) {
 	events.map(e => addMockDataToEvent(e));
 }
 
 function addMockDataToEvent(event) {
-	event.sender = {id: "123"};
-	event.recipient = {id: "123"};
+	event.sender = {
+		id: "123"
+	};
+	event.recipient = {
+		id: "123"
+	};
 	event.timestamp = "789";
+
+	return event;
 }
 
 //create a builder function for these!!!!!!!
@@ -110,21 +127,42 @@ const quickReplyEventstartOver = {
 	}
 };
 
+function createGetShowEvent(showType, genre) {
+	let state = buildState("showTypes", showType);
+	state.push(buildStep("genres", genre));
+	const payload = {
+		state: state
+	};
 
-let state = buildState("showTypes", foreignMovies);
+	const event = {
+		message: {
+			quick_reply: {
+				payload: JSON.stringify(payload)
+			},
+			text: "hello"
+		}
+	};
+
+	return addMockDataToEvent(event);
+}
+
+
+
+//create func
+/*let state = buildState("showTypes", "A show type that doesn't exist!!!!");
 state.push(buildStep("genres", "Horror"));
 const payload = {
 	state: state
 };
 
-const quickReplyEventGenre = {
+const quickReplyEventNoExistoShowType = {
 	message: {
 		quick_reply: {
 			payload: JSON.stringify(payload)
 		},
 		text: "hello"
 	}
-};
+};*/
 
 
 const gettingStartedPostBackEvent = {
@@ -139,7 +177,7 @@ const textMessageEvent = {
 	}
 };
 
-const moreInfoPayload = buildMoreInfoPayload("this movie is about bla bla...", "1242141", foreignMovies, "Action");
+const moreInfoPayload = buildMoreInfoPayload("this movie is about bla bla...", "72d7801f0a6149136c7d5ee8", foreignMovies, "Action");
 const moreInfoPostBackEvent = {
 	postback: {
 		payload: moreInfoPayload
@@ -165,12 +203,12 @@ const willWatchMoreInfoQuickReplyEvent = {
 			payload: JSON.stringify(moreInfowillWatchPayload)
 		},
 		text: "desc of movie"
-	}	
+	}
 };
 
 
 
-const NextShowPayload = buildNextShowPayload(foreignMovies, "Children", "12414");
+const NextShowPayload = buildNextShowPayload(foreignMovies, "Children", "52d7801f0a6147136c7d5ee8");
 const NextShowPostBackEvent = {
 	postback: {
 		payload: NextShowPayload
@@ -186,15 +224,14 @@ const nextShowMoreInfoQuickReplyEvent = {
 			payload: JSON.stringify(moreInfoNextShowPayload)
 		},
 		text: "desc of movie"
-	}	
+	}
 };
-
-
 
 
 
 //change this so events are taken automatically..
 const events = [quickReplyEventShowType, NextShowPostBackEvent, willWatchPostBackEvent, moreInfoPostBackEvent,
- textMessageEvent, gettingStartedPostBackEvent, quickReplyEventGenre, quickReplyEventstartOver, nextShowMoreInfoQuickReplyEvent,
- willWatchMoreInfoQuickReplyEvent];
+	textMessageEvent, gettingStartedPostBackEvent, quickReplyEventstartOver, nextShowMoreInfoQuickReplyEvent,
+	willWatchMoreInfoQuickReplyEvent
+];
 initEvents(events);
