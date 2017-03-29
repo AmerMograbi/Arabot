@@ -12,19 +12,14 @@ const foreignMovies = "foreignMovies";
 describe('Cache', function() {
 
 	describe('#All operations', function() {
-		it('should insert shows and then retrieve the first', function() {
+		it('should get next 3 shows successfully', function() {
 			cache.getNextShow("123", foreignMovies, "Fantasy")
 				.then(s => {
-					//console.log("next show is " + s.name);
 					cache.getNextShow("123", foreignMovies, "Fantasy")
-					.then( s => {
-						//console.log("next show is " + s.name);
-						cache.getNextShow("123", foreignMovies, "Fantasy")
 						.then(s => {
-							//console.log("next show is " + s.name);
-							//console.log("All Keys: " + JSON.stringify(cache.getAllKeys(), null, 2));
+							cache.getNextShow("123", foreignMovies, "Fantasy")
+								.then(s => {});
 						});
-					});
 				});
 		});
 	});

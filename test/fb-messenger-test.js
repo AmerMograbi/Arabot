@@ -23,76 +23,102 @@ describe('FbMessenger', function() {
 	describe('#ChatBot conversation', function() {
 
 		it('should send a good quick-reply on GETTING_STARTED postback', function() {
-			const messageToSendBack = fbMessenger.receivedPostback(gettingStartedPostBackEvent);
+			const payload = '{"gettingStarted": ""}';
+			const postbackEvent = buildPostBackResponseMessage(payload);
+			const messageToSendBack = fbMessenger.receivedPostback(postbackEvent);
 			messageBuilderTest.okQuickReplyStructureTest(messageToSendBack);
 		});
+
 		it('should send a good quick-reply on showType choose ', function() {
-			const messageToSendBack = fbMessenger.receivedMessage(quickReplyEventShowType);
+			const state = buildState("showTypes", foreignMovies);
+			const quickReplyEvent = createQuickReplyEvent(state, "hello");
+			const messageToSendBack = fbMessenger.receivedMessage(quickReplyEvent);
 			messageBuilderTest.okQuickReplyStructureTest(messageToSendBack);
 
 		});
+
 		it('should send a good generic template on genre choose', function() {
-			const event = createGetShowEvent(foreignMovies, "Action");
-			const messageToSendBack = fbMessenger.receivedMessage(event);
+			const state = createGetShowEventState(foreignMovies, "Action");
+			const quickReplyEvent = createQuickReplyEvent(state, "hello");
+			const messageToSendBack = fbMessenger.receivedMessage(quickReplyEvent);
 			return messageToSendBack
-				.then(msg => {	
+				.then(msg => {
 					(() => messageBuilderTest.okGenericTemplateStructureTest(msg)).should.not.throw();
 				});
 		});
+
 		it('should send a good quick-reply on noMoreShows event', function() {
-			let event = createGetShowEvent("A non-existant showtype", "A bad genre");
-			const p1 = fbMessenger.receivedMessage(event);
+			let state = createGetShowEventState("A non-existant showtype", "A bad genre");
+			let quickReplyEvent = createQuickReplyEvent(state, "hello");
+			const p1 = fbMessenger.receivedMessage(quickReplyEvent);
 
-			event = createGetShowEvent(foreignMovies, "A bad genre");
-			const p2 = fbMessenger.receivedMessage(event);
+			state = createGetShowEventState(foreignMovies, "A bad genre");
+			quickReplyEvent = createQuickReplyEvent(state, "hello");
+			const p2 = fbMessenger.receivedMessage(quickReplyEvent);
 
-			return Promise.all([p1,p2]).then(msgs => msgs.map(msg => {
+			return Promise.all([p1, p2]).then(msgs => msgs.map(msg => {
 				messageBuilderTest.okQuickReplyStructureTest(msg);
 			}));
 		});
+
 		it('should send a good quick-reply on "moreInfo"', function() {
-			const msg = fbMessenger.receivedPostback(moreInfoPostBackEvent);
+			const payload = buildMoreInfoPayload("movie desc...",
+				"72d7801f0a6149136c7d5ee8", foreignMovies, "Action");
+			const postbackEvent = buildPostBackResponseMessage(payload);
+			const msg = fbMessenger.receivedPostback(postbackEvent);
 			//console.log(JSON.stringify(msg, null, 2));
 			(() => messageBuilderTest.okQuickReplyStructureTest(msg)).should.not.throw();
 		});
+
 		it('should send a good quick-reply message on "willWatch"', function() {
-			//these two will add a duplicate entry in db's 'watched' list 
-			const p1 = fbMessenger.receivedPostback(willWatchPostBackEvent);
-			const p2 = fbMessenger.receivedMessage(willWatchMoreInfoQuickReplyEvent);
+			const payload = buildWillWatchPayload("58d7803f0a6747036c7d5ee6",
+				foreignMovies, "Children");
+			const postbackEvent = buildPostBackResponseMessage(payload);
+			const p1 = fbMessenger.receivedPostback(postbackEvent);
+
+			const state = buildState("moreInfoResponse", payload);
+			const quickReplyEvent = createQuickReplyEvent(state, "hello");
+			const p2 = fbMessenger.receivedMessage(quickReplyEvent);
 			//clean up after ourselves
 			//database.dropCollection("users");
 			return Promise.all([p1, p2]).then(msgs => msgs.map(msg => {
 				messageBuilderTest.okQuickReplyStructureTest(msg);
 			}));
 		});
+
 		it('should send the next show on "nextShow"', function() {
-			const p1 = fbMessenger.receivedPostback(NextShowPostBackEvent);
-			const p2 = fbMessenger.receivedMessage(nextShowMoreInfoQuickReplyEvent);
+			const payload = buildNextShowPayload(foreignMovies, "Children",
+				"52d7801f0a6147136c7d5ee8");
+			const postbackEvent = buildPostBackResponseMessage(payload);
+			const p1 = fbMessenger.receivedPostback(postbackEvent);
+
+			const state = buildState("moreInfoResponse", payload);
+			const quickReplyEvent = createQuickReplyEvent(state, "hello");
+			const p2 = fbMessenger.receivedMessage(quickReplyEvent);
 
 			return Promise.all([p1, p2]).then(msgs => msgs.map(msg => {
 				messageBuilderTest.okGenericTemplateStructureTest(msg);
 			}));
 
 		});
+
 		it('should send a good quick-reply message on "startOver"', function() {
-			const messageToSendBack = fbMessenger.receivedMessage(quickReplyEventstartOver);
+			const state = buildState("willWatchResponse", "startOver");
+			const quickReplyEvent = createQuickReplyEvent(state, "hello");
+
+			const messageToSendBack = fbMessenger.receivedMessage(quickReplyEvent);
 			messageBuilderTest.okQuickReplyStructureTest(messageToSendBack);
 		});
+		
 		it('should not throw if user sends a message with no handler', function() {
+			const textMessageEvent = buildTextMessageResponseEvent("hello");
 			const messageToSendBack = fbMessenger.receivedMessage(textMessageEvent);
 		});
 	});
 });
 
-let ShowTypePayload = {
-	state: buildState("showTypes", foreignMovies)
-};
 
-function initEvents(events) {
-	events.map(e => addMockDataToEvent(e));
-}
-
-function addMockDataToEvent(event) {
+function addEventDataToMessage(event) {
 	event.sender = {
 		id: "123"
 	};
@@ -104,134 +130,47 @@ function addMockDataToEvent(event) {
 	return event;
 }
 
-//create a builder function for these!!!!!!!
-const quickReplyEventShowType = {
-	message: {
-		quick_reply: {
-			payload: JSON.stringify(ShowTypePayload)
-		},
-		text: "hello"
-	}
-};
-
-let startOverPayload = {
-	state: buildState("willWatchResponse", "startOver")
-};
-
-const quickReplyEventstartOver = {
-	message: {
-		quick_reply: {
-			payload: JSON.stringify(startOverPayload)
-		},
-		text: "hello"
-	}
-};
-
-function createGetShowEvent(showType, genre) {
-	let state = buildState("showTypes", showType);
-	state.push(buildStep("genres", genre));
+function createQuickReplyEvent(state, text) {
 	const payload = {
 		state: state
 	};
+	const msg = buildQuickReplyResponseMessage(payload, text);
+	return addEventDataToMessage(msg);
+}
 
-	const event = {
+function createGetShowEventState(showType, genre) {
+	let state = buildState("showTypes", showType);
+	state.push(buildStep("genres", genre));
+	return state;
+}
+
+function buildQuickReplyResponseMessage(payload, text) {
+	return {
 		message: {
 			quick_reply: {
 				payload: JSON.stringify(payload)
 			},
-			text: "hello"
+			text: text
+		}
+	};
+}
+
+function buildPostBackResponseMessage(payload) {
+	const postback = {
+		postback: {
+			payload: payload
 		}
 	};
 
-	return addMockDataToEvent(event);
+	return addEventDataToMessage(postback);
 }
 
+function buildTextMessageResponseEvent(text) {
+	const msg = {
+		message: {
+			text: text,
+		}
+	};
 
-
-//create func
-/*let state = buildState("showTypes", "A show type that doesn't exist!!!!");
-state.push(buildStep("genres", "Horror"));
-const payload = {
-	state: state
-};
-
-const quickReplyEventNoExistoShowType = {
-	message: {
-		quick_reply: {
-			payload: JSON.stringify(payload)
-		},
-		text: "hello"
-	}
-};*/
-
-
-const gettingStartedPostBackEvent = {
-	postback: {
-		payload: '{"gettingStarted": ""}'
-	}
-};
-
-const textMessageEvent = {
-	message: {
-		text: "hello",
-	}
-};
-
-const moreInfoPayload = buildMoreInfoPayload("this movie is about bla bla...", "72d7801f0a6149136c7d5ee8", foreignMovies, "Action");
-const moreInfoPostBackEvent = {
-	postback: {
-		payload: moreInfoPayload
-	}
-};
-
-
-
-const willWatchPayload = buildWillWatchPayload("58d7803f0a6747036c7d5ee6", foreignMovies, "Children");
-const willWatchPostBackEvent = {
-	postback: {
-		payload: willWatchPayload
-	}
-};
-
-const moreInfowillWatchPayload = {
-	state: buildState("moreInfoResponse", willWatchPayload)
-};
-//console.log(JSON.stringify(moreInfowillWatchPayload, null, 2));
-const willWatchMoreInfoQuickReplyEvent = {
-	message: {
-		quick_reply: {
-			payload: JSON.stringify(moreInfowillWatchPayload)
-		},
-		text: "desc of movie"
-	}
-};
-
-
-
-const NextShowPayload = buildNextShowPayload(foreignMovies, "Children", "52d7801f0a6147136c7d5ee8");
-const NextShowPostBackEvent = {
-	postback: {
-		payload: NextShowPayload
-	}
-};
-
-const moreInfoNextShowPayload = {
-	state: buildState("moreInfoResponse", NextShowPayload)
-};
-const nextShowMoreInfoQuickReplyEvent = {
-	message: {
-		quick_reply: {
-			payload: JSON.stringify(moreInfoNextShowPayload)
-		},
-		text: "desc of movie"
-	}
-};
-
-
-
-//change this so events are taken automatically..
-const events = [quickReplyEventShowType, NextShowPostBackEvent, willWatchPostBackEvent, moreInfoPostBackEvent,
-	textMessageEvent, gettingStartedPostBackEvent, quickReplyEventstartOver, nextShowMoreInfoQuickReplyEvent,
-	willWatchMoreInfoQuickReplyEvent
-];
-initEvents(events);
+	return addEventDataToMessage(msg);
+}

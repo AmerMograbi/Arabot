@@ -104,7 +104,7 @@ function addToDb(showsWithMoreData, shows, showType, tmdbShowType) {
 //http://image.tmdb.org/t/p/w185//oN5lELHH5Xheiy0YdhnY3JB4hx2.jpg
 //where '/oN5lELHH5Xheiy0YdhnY3JB4hx2.jpg' is the poster path
 
-//http://image.tmdb.org/t/p/w342//o4lxNwKJz8oq3R0kLOIsDlHbDhZ.jpg
+//http://image.tmdb.org/t/p/w500//o4lxNwKJz8oq3R0kLOIsDlHbDhZ.jpg
 
 //http://api.themoviedb.org/3/movie/296096?api_key=c1d387802a440ec1351f3847005cef6a&append_to_response=videos
 
