@@ -117,14 +117,10 @@ function getRandomIntInclusive(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function addTypingOffToMessage(msg){
-  msg.sender_action = "typing_off";
-}
 
 function sendWithDelay(msg) {
   const second = 1000;
   const delay = getRandomIntInclusive(1.5*second, 3*second);
-  addTypingOffToMessage(msg);
   setTimeout(() => fbMessenger.sendMessage(msg).then(body => {
     const recipientId = body.recipient_id;
     const messageId = body.message_id;
