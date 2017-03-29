@@ -142,7 +142,7 @@ const textMessageEvent = {
 const moreInfoPayload = buildMoreInfoPayload("this movie is about bla bla...", "1242141", foreignMovies, "Action");
 const moreInfoPostBackEvent = {
 	postback: {
-		payload: JSON.stringify(moreInfoPayload)
+		payload: moreInfoPayload
 	}
 };
 
@@ -151,12 +151,12 @@ const moreInfoPostBackEvent = {
 const willWatchPayload = buildWillWatchPayload("58d7803f0a6747036c7d5ee6", foreignMovies, "Children");
 const willWatchPostBackEvent = {
 	postback: {
-		payload: JSON.stringify(willWatchPayload)
+		payload: willWatchPayload
 	}
 };
 
 const moreInfowillWatchPayload = {
-	state: buildState("moreInfoResponse", JSON.stringify(willWatchPayload))
+	state: buildState("moreInfoResponse", willWatchPayload)
 };
 //console.log(JSON.stringify(moreInfowillWatchPayload, null, 2));
 const willWatchMoreInfoQuickReplyEvent = {
@@ -173,12 +173,12 @@ const willWatchMoreInfoQuickReplyEvent = {
 const NextShowPayload = buildNextShowPayload(foreignMovies, "Children");
 const NextShowPostBackEvent = {
 	postback: {
-		payload: JSON.stringify(NextShowPayload)
+		payload: NextShowPayload
 	}
 };
 
 const moreInfoNextShowPayload = {
-	state: buildState("moreInfoResponse", JSON.stringify(NextShowPayload))
+	state: buildState("moreInfoResponse", NextShowPayload)
 };
 const nextShowMoreInfoQuickReplyEvent = {
 	message: {
