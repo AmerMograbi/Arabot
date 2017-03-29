@@ -52,7 +52,7 @@ app.post('/webhook', function(req, res) {
       // Iterate over each messaging event
       entry.messaging.forEach(function(event) {
         let messageTosendBack;
-        //fbMessenger.sendBotTypingStatus(event.sender.id, "typing_on");
+        fbMessenger.sendBotTypingStatus(event.sender.id, "typing_on");
 
         if (event.message) {
           messageTosendBack = fbMessenger.receivedMessage(event);
@@ -101,27 +101,34 @@ function sendMessage(messageTosendBack) {
   const isPromise = typeof messageTosendBack.then == 'function';
   if (isPromise) {
     messageTosendBack
-      .then(msg => send(msg))
+      .then(msg => sendWithDelay(msg))
       .catch(e => {
         throw new Error("Failed to recieve message to send back due to err: " + e);
       });
   } else {
     if (messageTosendBack)
-      send(messageTosendBack);
+      sendWithDelay(messageTosendBack);
   }
 }
 
-function send(msg) {
-  fbMessenger.sendMessage(msg).then(body => {
+function getRandomIntInclusive(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function sendWithDelay(msg) {
+  const delay = getRandomIntInclusive(350, 800);
+  setTimeout(() => fbMessenger.sendMessage(msg).then(body => {
     const recipientId = body.recipient_id;
     const messageId = body.message_id;
-    //fbMessenger.sendBotTypingStatus(recipientId, "typing_off");
+    fbMessenger.sendBotTypingStatus(recipientId, "typing_off");
 
     console.log("Successfully sent message with id %s to recipient %s",
       messageId, recipientId);
-  }).
-  catch(e => {
+  }).catch(e => {
     throw new Error("Unable to send message. messageData=" +
       JSON.stringify(msg, null, 2) + "error: " + e);
-  });
+  }), delay);
+
 }
