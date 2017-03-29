@@ -20,10 +20,10 @@ app.use(xhub({
 app.use(bodyParser.json());
 
 database.init(process.env.MONGODB_URI).then(() => {
-    console.log("Successfully connected to the database.");
-  }).catch(err => {
-    throw new Error("Cannot connect to the database. err: " + err);
-  });
+  console.log("Successfully connected to the database.");
+}).catch(err => {
+  throw new Error("Cannot connect to the database. err: " + err);
+});
 
 
 app.get('/webhook', function(req, res) {
@@ -101,12 +101,27 @@ function sendMessage(messageTosendBack) {
   const isPromise = typeof messageTosendBack.then == 'function';
   if (isPromise) {
     messageTosendBack
-      .then(msg => fbMessenger.sendMessage(msg))
+      .then(msg => send(msg))
       .catch(e => {
         throw new Error("Failed to recieve message to send back due to err: " + e);
       });
   } else {
-    if(messageTosendBack)
-      fbMessenger.sendMessage(messageTosendBack);
+    if (messageTosendBack)
+      send(messageTosendBack);
   }
+}
+
+function send(msg) {
+  fbMessenger.sendMessage(msg).then(body => {
+    const recipientId = body.recipient_id;
+    const messageId = body.message_id;
+    callSendAPI(fbMessenger.sendBotTypingStatus(recipientId, "typing_off"));
+
+    console.log("Successfully sent message with id %s to recipient %s",
+      messageId, recipientId);
+  }).
+  catch(e => {
+    throw new Error("Unable to send message. messageData=" +
+      JSON.stringify(msg, null, 2) + "error: " + e);
+  });
 }
