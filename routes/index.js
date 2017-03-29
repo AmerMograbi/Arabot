@@ -52,7 +52,7 @@ app.post('/webhook', function(req, res) {
       // Iterate over each messaging event
       entry.messaging.forEach(function(event) {
         let messageTosendBack;
-        fbMessenger.sendBotTypingStatus(event.sender.id, "typing_on");
+        //fbMessenger.sendBotTypingStatus(event.sender.id, "typing_on");
 
         if (event.message) {
           messageTosendBack = fbMessenger.receivedMessage(event);
@@ -115,7 +115,7 @@ function send(msg) {
   fbMessenger.sendMessage(msg).then(body => {
     const recipientId = body.recipient_id;
     const messageId = body.message_id;
-    fbMessenger.sendBotTypingStatus(recipientId, "typing_off");
+    //fbMessenger.sendBotTypingStatus(recipientId, "typing_off");
 
     console.log("Successfully sent message with id %s to recipient %s",
       messageId, recipientId);
