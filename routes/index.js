@@ -118,7 +118,8 @@ function getRandomIntInclusive(min, max) {
 }
 
 function sendWithDelay(msg) {
-  const delay = getRandomIntInclusive(500, 1000);
+  const second = 1000;
+  const delay = getRandomIntInclusive(second, 2*second);
   setTimeout(() => fbMessenger.sendMessage(msg).then(body => {
     const recipientId = body.recipient_id;
     const messageId = body.message_id;
