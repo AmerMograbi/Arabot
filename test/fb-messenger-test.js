@@ -170,7 +170,7 @@ const willWatchMoreInfoQuickReplyEvent = {
 
 
 
-const NextShowPayload = buildNextShowPayload(foreignMovies, "Children");
+const NextShowPayload = buildNextShowPayload(foreignMovies, "Children", "12414");
 const NextShowPostBackEvent = {
 	postback: {
 		payload: NextShowPayload
