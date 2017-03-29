@@ -52,6 +52,8 @@ app.post('/webhook', function(req, res) {
       // Iterate over each messaging event
       entry.messaging.forEach(function(event) {
         let messageTosendBack;
+        fbMessenger.sendBotTypingStatus(event.sender.id, "typing_on");
+
         if (event.message) {
           messageTosendBack = fbMessenger.receivedMessage(event);
         } else if (event.postback) {
