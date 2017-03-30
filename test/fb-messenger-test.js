@@ -34,7 +34,6 @@ describe('FbMessenger', function() {
 			const quickReplyEvent = createQuickReplyEvent(state, "hello");
 			const messageToSendBack = fbMessenger.receivedMessage(quickReplyEvent);
 			messageBuilderTest.okQuickReplyStructureTest(messageToSendBack);
-
 		});
 
 		it('should send a good generic template on genre choose', function() {
@@ -109,7 +108,7 @@ describe('FbMessenger', function() {
 			const messageToSendBack = fbMessenger.receivedMessage(quickReplyEvent);
 			messageBuilderTest.okQuickReplyStructureTest(messageToSendBack);
 		});
-		
+
 		it('should not throw if user sends a message with no handler', function() {
 			const textMessageEvent = buildTextMessageResponseEvent("hello");
 			const messageToSendBack = fbMessenger.receivedMessage(textMessageEvent);
@@ -138,6 +137,8 @@ function createQuickReplyEvent(state, text) {
 	return addEventDataToMessage(msg);
 }
 
+//This state will induce a 'getShow' event as if a showType
+//and a genre were chosen
 function createGetShowEventState(showType, genre) {
 	let state = buildState("showTypes", showType);
 	state.push(buildStep("genres", genre));
