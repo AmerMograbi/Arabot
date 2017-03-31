@@ -12,12 +12,12 @@ run();
 
 function run() {
 	database.init(process.env.MONGODB_LOCAL_URI).then(() => {
-			//add(showDataExtractor.getJsonFromTxtFile(filePath), foreignMovies, "movie");
+			add(showDataExtractor.getJsonFromTxtFile(filePath), foreignMovies, "movie");
 			//dropDb();
 			//addToWatchedTest();
 			//findInDb();		
 			//findUser("123");
-			database.dropCollection("users").then(res => console.log("collection dropped. res:" + res));
+			//database.dropCollection("users").then(res => console.log("collection dropped. res:" + res));
 		})
 		.catch((err) => console.log(err));
 

@@ -93,7 +93,7 @@ function addData(show, url, tmdbShowType) {
 					resolve(show);
 				});
 			} else {
-				reject(new Error("Couldn't find " + show.name));
+				reject("Couldn't find " + show.name);
 			}
 		});
 	});
@@ -108,7 +108,7 @@ function getTrailerKey(showId, tmdbShowType){
 			const firstTrailer = body.videos.results.filter(vid => vid.type == "Trailer")[0];
 			resolve(firstTrailer ? firstTrailer.key : "#");
 			if(!firstTrailer)
-				console.log(new Error("Couldn't find trailer for " + showId));
+				console.log("Couldn't find trailer for " + showId);
 		});
 	});
 }

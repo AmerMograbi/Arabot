@@ -13,7 +13,7 @@ describe('Cache', function() {
 
 	describe('#All operations', function() {
 		it('should get next 3 shows successfully', function() {
-			cache.getNextShow("123", foreignMovies, "Fantasy")
+			return cache.getNextShow("123", foreignMovies, "Fantasy")
 				.then(s => {
 					cache.getNextShow("123", foreignMovies, "Fantasy")
 						.then(s => {
