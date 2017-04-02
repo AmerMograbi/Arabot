@@ -17,10 +17,10 @@ function run() {
 			//add(showDataExtractor.getShowsFromTxtFile(filePath), foreignMovies, "movie");
 			//addTurkishSeries();
 			//dropDb();
-			//addToLikedTest();
-			printUsers();		
+			//addToSeenTest();
+			//printUsers();		
 			//findUser("123");
-			//database.dropCollection("users").then(res => console.log("collection dropped. res:" + res));
+			database.dropCollection("users").then(res => console.log("collection dropped. res:" + res));
 		})
 		.catch((err) => console.log(err));
 }
@@ -80,12 +80,12 @@ function findUser(userId) {
 }
 
 
-function addToLikedTest() {
-	database.addToLikedList("123", "62361421262", foreignMovies, "Action");
-	database.addToLikedList("123", "68853", foreignMovies, "Comedy");
-	database.addToLikedList("123", "3523", "turkishSeries", "Drama");
-	database.addToLikedList("123", "125415", "turkishSeries", "Drama");
-	database.addToLikedList("123", "125415", "turkishSeries", "Adventure");
+function addToSeenTest() {
+	database.addToSeenList("123", "62361421262", foreignMovies, "Action");
+	database.addToSeenList("123", "68853", foreignMovies, "Comedy");
+	database.addToSeenList("123", "3523", "turkishSeries", "Drama");
+	database.addToSeenList("123", "125415", "turkishSeries", "Drama");
+	database.addToSeenList("123", "125415", "turkishSeries", "Adventure");
 }
 
 
