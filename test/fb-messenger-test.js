@@ -46,9 +46,8 @@ describe('FbMessenger', function() {
 			quickReplyEvent = createQuickReplyEvent(state, "hello");
 			const p2 = fbMessenger.receivedMessage(quickReplyEvent);
 
-			return Promise.all([p2]).then(msgs => msgs.map(msg => {
+			return Promise.all([p1, p2]).then(msgs => msgs.map(msg => {
 				messageBuilderTest.okGenericTemplateStructureTest(msg);
-				console.log(JSON.stringify(msg, null, 2));
 			}));
 		});
 
