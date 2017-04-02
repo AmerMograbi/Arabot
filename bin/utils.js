@@ -15,12 +15,12 @@ run();
 function run() {
 	database.init(process.env.MONGODB_LOCAL_URI).then(() => {
 			//add(showDataExtractor.getShowsFromTxtFile(filePath), foreignMovies, "movie");
-			addTurkishSeries();
+			//addTurkishSeries();
 			//dropDb();
-			//addToWatchedTest();
-			//findInDb();		
+			//addToLikedTest();
+			printUsers();		
 			//findUser("123");
-			//database.dropCollection(turkishSeries).then(res => console.log("collection dropped. res:" + res));
+			//database.dropCollection("users").then(res => console.log("collection dropped. res:" + res));
 		})
 		.catch((err) => console.log(err));
 }
@@ -61,12 +61,9 @@ function cursorTest(showType) {
 	});
 }
 
-function findInDb(genre, showType) {
+function printUsers(genre, showType) {
 	const users = database.getDb().collection("users");
-	const mongoUserId = "58d7762acb2c9f12b413284e";
-	users.find({
-		"_id": new database.ObjectId(mongoUserId)
-	}).toArray(function(err, res) {
+	users.find({}).toArray(function(err, res) {
 		if (err) throw new Error(err);
 		console.log(JSON.stringify(res, null, 2));
 	});
@@ -83,12 +80,12 @@ function findUser(userId) {
 }
 
 
-function addToWatchedTest() {
-	database.addToWatchedList("123", "62361421262", foreignMovies, "Action");
-	database.addToWatchedList("123", "68853", foreignMovies, "Comedy");
-	database.addToWatchedList("123", "3523", "turkishSeries", "Drama");
-	database.addToWatchedList("123", "125415", "turkishSeries", "Drama");
-	database.addToWatchedList("123", "125415", "turkishSeries", "Adventure");
+function addToLikedTest() {
+	database.addToLikedList("123", "62361421262", foreignMovies, "Action");
+	database.addToLikedList("123", "68853", foreignMovies, "Comedy");
+	database.addToLikedList("123", "3523", "turkishSeries", "Drama");
+	database.addToLikedList("123", "125415", "turkishSeries", "Drama");
+	database.addToLikedList("123", "125415", "turkishSeries", "Adventure");
 }
 
 

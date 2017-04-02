@@ -12,7 +12,7 @@ const database = require('../lib/database.js');
 const rewiredMessageBuilder = rewire('../lib/message-builder.js');
 const buildState = rewiredMessageBuilder.__get__('buildState');
 const buildStep = rewiredMessageBuilder.__get__('buildStep');
-const buildWillWatchPayload = rewiredMessageBuilder.__get__('buildWillWatchPayload');
+const buildlikedPayload = rewiredMessageBuilder.__get__('buildlikedPayload');
 const buildNextShowPayload = rewiredMessageBuilder.__get__('buildNextShowPayload');
 const buildMoreInfoPayload = rewiredMessageBuilder.__get__('buildMoreInfoPayload');
 
@@ -74,8 +74,8 @@ describe('FbMessenger', function() {
 			(() => messageBuilderTest.okQuickReplyStructureTest(msg)).should.not.throw();
 		});
 
-		it('should send a good quick-reply message on "willWatch"', function() {
-			const payload = buildWillWatchPayload("58d7803f0a6747036c7d5ee6",
+		it('should send a good quick-reply message on "liked"', function() {
+			const payload = buildlikedPayload("58d7803f0a6747036c7d5ee6",
 				foreignMovies, "Children");
 			const postbackEvent = buildPostBackResponseMessage(payload);
 			const p1 = fbMessenger.receivedPostback(postbackEvent);
@@ -107,7 +107,7 @@ describe('FbMessenger', function() {
 		});
 
 		it('should send a good quick-reply message on "startOver"', function() {
-			const state = buildState("willWatchResponse", "startOver");
+			const state = buildState("likedResponse", "startOver");
 			const quickReplyEvent = createQuickReplyEvent(state, "hello");
 
 			const messageToSendBack = fbMessenger.receivedMessage(quickReplyEvent);
