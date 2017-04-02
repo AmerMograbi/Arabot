@@ -3,8 +3,10 @@ const showDataExtractor = require('../bin/show-data-extractor.js');
 const database = require('../lib/database.js');
 const arabicText = require('../arabic-text.json');
 const filePath = "D:\\gitProjects\\showBot\\bin\\movies.txt";
+const turkishSeriesFilePath = "D:\\gitProjects\\showBot\\bin\\turkishSeries.txt";
 const maxShowNum = 19;
 const foreignMovies = "foreignMovies";
+const turkishSeries = "turkishSeries";
 
 
 run();
@@ -12,21 +14,29 @@ run();
 
 function run() {
 	database.init(process.env.MONGODB_LOCAL_URI).then(() => {
-			add(showDataExtractor.getJsonFromTxtFile(filePath), foreignMovies, "movie");
+			//add(showDataExtractor.getShowsFromTxtFile(filePath), foreignMovies, "movie");
+			addTurkishSeries();
 			//dropDb();
 			//addToWatchedTest();
 			//findInDb();		
 			//findUser("123");
-			//database.dropCollection("users").then(res => console.log("collection dropped. res:" + res));
+			//database.dropCollection(turkishSeries).then(res => console.log("collection dropped. res:" + res));
 		})
 		.catch((err) => console.log(err));
-
 }
+
+function addTurkishSeries() {
+	const shows = showDataExtractor.getShowsFromTxtFile(turkishSeriesFilePath, true);
+	//console.log(JSON.stringify(shows, null, 2) + " length= " + shows.length);
+	database.addShows(turkishSeries, shows)
+		.then(res => console.log("added " + res.result.n + " turkish series successfully."));
+}
+
 
 function add(shows, showType, tmdbShowType) {
 	console.log("adding...");
 	showDataExtractor.addMoreDataFromApi(shows.slice(0, maxShowNum), tmdbShowType)
-		.then(showsWithMoreData => addToDb(showsWithMoreData, shows, showType, tmdbShowType)) //console.log(showsWithMoreData))
+		.then(showsWithMoreData => addToDbWithDelay(showsWithMoreData, shows, showType, tmdbShowType)) //console.log(showsWithMoreData))
 		.catch((err) => console.log(err));
 }
 
@@ -75,15 +85,15 @@ function findUser(userId) {
 
 function addToWatchedTest() {
 	database.addToWatchedList("123", "62361421262", foreignMovies, "Action");
- 	database.addToWatchedList("123", "68853", foreignMovies, "Comedy");
- 	database.addToWatchedList("123", "3523", "turkishSeries", "Drama");
+	database.addToWatchedList("123", "68853", foreignMovies, "Comedy");
+	database.addToWatchedList("123", "3523", "turkishSeries", "Drama");
 	database.addToWatchedList("123", "125415", "turkishSeries", "Drama");
- 	database.addToWatchedList("123", "125415", "turkishSeries", "Adventure");
- }
+	database.addToWatchedList("123", "125415", "turkishSeries", "Adventure");
+}
 
 
-function addToDb(showsWithMoreData, shows, showType, tmdbShowType) {
-	database.addShow(showType, showsWithMoreData)
+function addToDbWithDelay(showsWithMoreData, shows, showType, tmdbShowType) {
+	database.addShows(showType, showsWithMoreData)
 		.then(res => {
 			console.log("added " + res.result.n + " objects successfully.");
 			shows.splice(0, maxShowNum);

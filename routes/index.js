@@ -124,6 +124,7 @@ function sendWithDelay(msg) {
   setTimeout(() => fbMessenger.sendMessage(msg).then(body => {
     const recipientId = body.recipient_id;
     const messageId = body.message_id;
+    fbMessenger.sendBotTypingStatus(recipientId, "typing_off");
 
     console.log("Successfully sent message with id %s to recipient %s",
       messageId, recipientId);

@@ -4,13 +4,18 @@ const fs = require('fs');
 var request = require('request');
 
 module.exports = {
-	getJsonFromTxtFile: function(filePath) {
+	getShowsFromTxtFile: function(filePath, isTurkish) {
 		let data = fs.readFileSync(filePath).toString();
 		const multipleNewLines = /\n\s*\n/g;
-		const nameGenreAndDesc = /(?:\n\d*.\s*)([^\n]+)\n([^\n\r]+)/g;
+		let showInfo;
+
+		if(isTurkish)
+			showInfo = /(?:\n\d*\.\s*)([^\n]+)\s*([^\n\r]+)\s*([^\s\r]+)/g;
+		else
+			showInfo = /(?:\n\d*.\s*)([^\n]+)\n([^\n\r]+)/g;
 
 		data = data.replace(multipleNewLines, '\n');
-		const shows = data.matchAll(nameGenreAndDesc);
+		const shows = data.matchAll(showInfo);
 		return shows;
 	},
 
@@ -27,31 +32,42 @@ String.prototype.matchAll = function(regexp) {
 		let args = [...arguments];
 		//remove last two irrelevant args
 		args.splice(-2, 2);
-		args.push(shows);
+
+		if(args.length == 4){ 
+			const turkishImageIdIndex = 3;	
+			//add 'shows' arg before turkishImageId
+			args.splice(turkishImageIdIndex, 0, shows);
+		}else{
+			args.push(shows);
+		}
 		addMatchedToArray.apply(null, args);
 	});
 
 	return shows.length ? shows : null;
 };
 
-function addMatchedToArray(match, nameAndGenres, description, shows) {
+function addMatchedToArray(match, nameAndGenres, description, shows, turkishImageId) {
 	const nameRegex = /^[^\(]+/;
 	const nameRemoved = nameAndGenres.replace(nameRegex, '');
-	const genreRegex = /(?:\(\d*\))\s*-\s*([^\n]+)\r/;
+	const genreDateRegex = /\((\d*)\)\s*-\s*([^\n]+)\r/;
 	const genreSeparator = /\s*\+\s*/;
 
 	const name = nameAndGenres.match(nameRegex)[0]
 		.replace(/[ \t]*$/, '');
 
-	const genres = nameAndGenres.match(genreRegex)[1].split(genreSeparator)
+	const releaseDate = nameAndGenres.match(genreDateRegex)[1];
+	const genres = nameAndGenres.match(genreDateRegex)[2].split(genreSeparator)
 		.map(genre => genre.replace(/\s/g, ''))
 		.map(genre => genre.replace(/,/g, '+'));
 
 	let show = {
 		"name": name,
 		"genres": genres,
-		"description": description
+		"description": description,
+		"releaseDate": releaseDate,
+		"imageUrl": turkishImageId + ".jpg"
 	};
+
 	shows.push(show);
 }
 

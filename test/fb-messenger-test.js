@@ -18,6 +18,7 @@ const buildMoreInfoPayload = rewiredMessageBuilder.__get__('buildMoreInfoPayload
 
 
 const foreignMovies = "foreignMovies";
+const turkishSeries = "turkishSeries";
 
 describe('FbMessenger', function() {
 	describe('#ChatBot conversation', function() {
@@ -37,13 +38,18 @@ describe('FbMessenger', function() {
 		});
 
 		it('should send a good generic template on genre choose', function() {
-			const state = createGetShowEventState(foreignMovies, "Action");
-			const quickReplyEvent = createQuickReplyEvent(state, "hello");
-			const messageToSendBack = fbMessenger.receivedMessage(quickReplyEvent);
-			return messageToSendBack
-				.then(msg => {
-					(() => messageBuilderTest.okGenericTemplateStructureTest(msg)).should.not.throw();
-				});
+			let state = createGetShowEventState(foreignMovies, "Action");
+			let quickReplyEvent = createQuickReplyEvent(state, "hello");
+			const p1 = fbMessenger.receivedMessage(quickReplyEvent);
+
+			state = createGetShowEventState(turkishSeries, "Action");
+			quickReplyEvent = createQuickReplyEvent(state, "hello");
+			const p2 = fbMessenger.receivedMessage(quickReplyEvent);
+
+			return Promise.all([p2]).then(msgs => msgs.map(msg => {
+				messageBuilderTest.okGenericTemplateStructureTest(msg);
+				console.log(JSON.stringify(msg, null, 2));
+			}));
 		});
 
 		it('should send a good quick-reply on noMoreShows event', function() {
