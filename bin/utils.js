@@ -19,7 +19,7 @@ function run() {
 			//dropDb();
 			//addToSeenTest();
 			//printUsers();		
-			//findUser("123");
+			findUser("123");
 			//printAllInCollection(turkishSeries);
 			//database.dropCollection("users").then(res => console.log("collection dropped. res:" + res));
 		})
