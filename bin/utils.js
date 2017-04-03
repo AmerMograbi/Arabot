@@ -20,6 +20,7 @@ function run() {
 			//addToSeenTest();
 			//printUsers();		
 			//findUser("123");
+			//printAllInCollection(turkishSeries);
 			//database.dropCollection("users").then(res => console.log("collection dropped. res:" + res));
 		})
 		.catch((err) => console.log(err));
@@ -30,6 +31,11 @@ function addTurkishSeries() {
 	//console.log(JSON.stringify(shows, null, 2) + " length= " + shows.length);
 	database.addShows(turkishSeries, shows)
 		.then(res => console.log("added " + res.result.n + " turkish series successfully."));
+}
+
+function printAllInCollection(showType){
+	database.getAllInCollection(turkishSeries)
+	.then(items => console.log(JSON.stringify(items, null, 2) + "items.length= " + items.length));
 }
 
 
@@ -104,15 +110,3 @@ function addToDbWithDelay(showsWithMoreData, shows, showType, tmdbShowType) {
 
 		});
 }
-
-
-//example json
-//https://api.themoviedb.org/3/search/movie?api_key=c1d387802a440ec1351f3847005cef6a&query=Me+Before+You
-//http://image.tmdb.org/t/p/w185//oN5lELHH5Xheiy0YdhnY3JB4hx2.jpg
-//where '/oN5lELHH5Xheiy0YdhnY3JB4hx2.jpg' is the poster path
-
-//http://image.tmdb.org/t/p/w500//o4lxNwKJz8oq3R0kLOIsDlHbDhZ.jpg
-
-//http://api.themoviedb.org/3/movie/296096?api_key=c1d387802a440ec1351f3847005cef6a&append_to_response=videos
-
-//and w185 is the size

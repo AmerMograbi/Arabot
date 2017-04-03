@@ -7,11 +7,11 @@
 	},
 	"genresText": "ما هو مزاجك الآن؟",
 	"genres":{
+		"Comedy": "😁",
+		"Action": "🔫",
 	 	"Romance+Comedy": "❤️😁",
 	 	"Romance+Drama": "❤️😢",
 	 	"Drama": "😢",
-	 	"Comedy": "😁",
-	 	"Action": "🔫",
 	 	"Thriller": "😰",
 	 	"Horror": "👻",
 	 	"Fantasy": "👽",

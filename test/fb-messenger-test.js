@@ -48,6 +48,7 @@ describe('FbMessenger', function() {
 
 			return Promise.all([p1, p2]).then(msgs => msgs.map(msg => {
 				messageBuilderTest.okGenericTemplateStructureTest(msg);
+
 			}));
 		});
 
@@ -75,7 +76,7 @@ describe('FbMessenger', function() {
 		});
 
 		it('should send a good quick-reply message on "liked"', function() {
-			const payload = buildLikedPayload("58d7803f0a6747036c7d5ee6",
+			const payload = buildLikedPayload("76d6666f0a6147136c7d5ee1",
 				foreignMovies, "Children");
 			const postbackEvent = buildPostBackResponseMessage(payload);
 			const p1 = fbMessenger.receivedPostback(postbackEvent);
@@ -83,16 +84,15 @@ describe('FbMessenger', function() {
 			const state = buildState("moreInfoResponse", payload);
 			const quickReplyEvent = createQuickReplyEvent(state, "hello");
 			const p2 = fbMessenger.receivedMessage(quickReplyEvent);
-			//clean up after ourselves
-			//database.dropCollection("users");
+
 			return Promise.all([p1, p2]).then(msgs => msgs.map(msg => {
 				messageBuilderTest.okQuickReplyStructureTest(msg);
 			}));
 		});
 
 		it('should send the next show on "nextShow"', function() {
-			const payload = buildNextShowPayload(foreignMovies, "Children",
-				"52d7801f0a6147136c7d5ee8");
+			let payload = buildNextShowPayload(foreignMovies, "Children",
+				"76d6666f0a6147136c7d5ee1");
 			const postbackEvent = buildPostBackResponseMessage(payload);
 			const p1 = fbMessenger.receivedPostback(postbackEvent);
 
@@ -120,6 +120,12 @@ describe('FbMessenger', function() {
 		});
 	});
 });
+
+  // after(function() {
+  //   // runs after all tests in this block
+  //   database.dropCollection("users")
+  //   .then(console.log("cleaned up users."));
+  // });
 
 
 function addEventDataToMessage(event) {
