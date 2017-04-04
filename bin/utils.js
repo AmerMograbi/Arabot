@@ -23,7 +23,7 @@ function run() {
 			//printUsers();		
 			//findUser("123");
 			//printAllInCollection(turkishSeries);
-			//database.dropCollection("users").then(res => console.log("collection dropped. res:" + res));
+			database.dropCollection("users").then(res => console.log("collection dropped. res:" + res));
 		})
 		.catch((err) => console.log(err));
 }
