@@ -7,19 +7,21 @@ const turkishSeriesFilePath = "D:\\gitProjects\\showBot\\bin\\turkishSeries.txt"
 const maxShowNum = 19;
 const foreignMovies = "foreignMovies";
 const turkishSeries = "turkishSeries";
+const cache = require('../lib/cache.js');
 
 
 run();
 
 
 function run() {
+
 	database.init(process.env.MONGODB_LOCAL_URI).then(() => {
 			//add(showDataExtractor.getShowsFromTxtFile(filePath), foreignMovies, "movie");
 			//addTurkishSeries();
 			//dropDb();
 			//addToSeenTest();
 			//printUsers();		
-			findUser("123");
+			//findUser("123");
 			//printAllInCollection(turkishSeries);
 			//database.dropCollection("users").then(res => console.log("collection dropped. res:" + res));
 		})

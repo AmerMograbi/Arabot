@@ -15,12 +15,24 @@ describe('Cache', function() {
 		it('should get next 3 shows successfully', function() {
 			return cache.getNextShow("123", foreignMovies, "Fantasy")
 				.then(s => {
+					isOkShow(s);
 					cache.getNextShow("123", foreignMovies, "Fantasy")
 						.then(s => {
+							isOkShow(s);
 							cache.getNextShow("123", foreignMovies, "Fantasy")
-								.then(s => {});
+								.then(s => {
+									isOkShow(s);
+								});
 						});
 				});
 		});
 	});
 });
+
+function isOkShow(show){
+	assert.ok(show.name, "show should have name");
+	assert.ok(show.description, "show should have description");
+	assert.ok(show.releaseDate, "show should have releaseDate");
+	assert.ok(show.trailerKey, "show should have trailerKey");
+	assert.ok(show.imageUrl, "show should have imageUrl");
+}

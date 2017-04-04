@@ -121,11 +121,12 @@ describe('FbMessenger', function() {
 	});
 });
 
-  // after(function() {
-  //   // runs after all tests in this block
-  //   database.dropCollection("users")
-  //   .then(console.log("cleaned up users."));
-  // });
+  after(function() {
+    // runs after all tests in this block
+    database.dropCollection("users")
+    .then(res => console.log("cleaned up users."))
+    .catch(e => console.log("nothing to clean."));
+  });
 
 
 function addEventDataToMessage(event) {
