@@ -15,6 +15,7 @@ const buildStep = rewiredMessageBuilder.__get__('buildStep');
 const buildLikedPayload = rewiredMessageBuilder.__get__('buildLikedPayload');
 const buildNextShowPayload = rewiredMessageBuilder.__get__('buildNextShowPayload');
 const buildMoreInfoPayload = rewiredMessageBuilder.__get__('buildMoreInfoPayload');
+const buildStartOverPayload = rewiredMessageBuilder.__get__('buildStartOverPayload');
 
 
 const foreignMovies = "foreignMovies";
@@ -76,11 +77,14 @@ describe('FbMessenger', function() {
 		});
 
 		it('should send a good quick-reply message on "liked"', function() {
+
+			//testing the liked button that's on the show generic template msg
 			const payload = buildLikedPayload("76d6666f0a6147136c7d5ee1",
 				foreignMovies, "Children");
 			const postbackEvent = buildPostBackResponseMessage(payload);
 			const p1 = fbMessenger.receivedPostback(postbackEvent);
 
+			//testing the liked button that appears after pressing 'moreInfo'
 			const state = buildState("moreInfoResponse", payload);
 			const quickReplyEvent = createQuickReplyEvent(state, "hello");
 			const p2 = fbMessenger.receivedMessage(quickReplyEvent);
@@ -91,28 +95,38 @@ describe('FbMessenger', function() {
 		});
 
 		it('should send the next show on "nextShow"', function() {
+
+			//testing the 'next' button that's on the show generic template msg
 			let payload = buildNextShowPayload(foreignMovies, "Children",
 				"76d6666f0a6147136c7d5ee1");
 			const postbackEvent = buildPostBackResponseMessage(payload);
 			const p1 = fbMessenger.receivedPostback(postbackEvent);
 
-			const state = buildState("moreInfoResponse", payload);
-			const quickReplyEvent = createQuickReplyEvent(state, "hello");
+			//testing the 'next' button that appears after pressing 'moreInfo'
+			let state = buildState("moreInfoResponse", payload);
+			let quickReplyEvent = createQuickReplyEvent(state, "hello");
 			const p2 = fbMessenger.receivedMessage(quickReplyEvent);
 
-			return Promise.all([p1, p2]).then(msgs => msgs.map(msg => {
+			//testing the 'next' button that appears after pressing 'liked'
+			state = buildState("likedResponse", payload);
+			quickReplyEvent = createQuickReplyEvent(state, "hello");
+			const p3 = fbMessenger.receivedMessage(quickReplyEvent);
+
+			return Promise.all([p1, p2, p3]).then(msgs => msgs.map(msg => {
 				messageBuilderTest.okGenericTemplateStructureTest(msg);
 			}));
 
 		});
 
 		it('should send a good quick-reply message on "startOver"', function() {
-			const state = buildState("likedResponse", "startOver");
+			const payload = buildStartOverPayload();
+			let state = buildState("likedResponse", payload);
 			const quickReplyEvent = createQuickReplyEvent(state, "hello");
 
 			const messageToSendBack = fbMessenger.receivedMessage(quickReplyEvent);
 			messageBuilderTest.okQuickReplyStructureTest(messageToSendBack);
 		});
+
 
 		it('should not throw if user sends a message with no handler', function() {
 			const textMessageEvent = buildTextMessageResponseEvent("hello");
@@ -121,12 +135,12 @@ describe('FbMessenger', function() {
 	});
 });
 
-  after(function() {
-    // runs after all tests in this block
-    database.dropCollection("users")
-    .then(res => console.log("cleaned up users."))
-    .catch(e => console.log("nothing to clean."));
-  });
+after(function() {
+	// runs after all tests in this block
+	database.dropCollection("users")
+		.then(res => console.log("cleaned up users."))
+		.catch(e => console.log("nothing to clean."));
+});
 
 
 function addEventDataToMessage(event) {
