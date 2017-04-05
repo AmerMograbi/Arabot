@@ -24,9 +24,9 @@
 	},
 
 	"moreInfoResponse":{
-		"startOver": "ابدأ من جديد 🔄",
 		"liked": "أعجبني ❤",
-		"nextShow": "التالي ⬅"		
+		"startOver": "ابدأ من جديد 🔄",
+		"nextShow": "التالي ⬅"
 	},
 
 	"showButtons": {
