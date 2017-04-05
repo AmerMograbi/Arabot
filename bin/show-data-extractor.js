@@ -75,7 +75,7 @@ function addMatchedToArray(match, nameAndGenres, description, shows, turkishImag
 
 function getShowUrl(showName, tmdbShowType) {
 	let url = "https://api.themoviedb.org/3/search/" + tmdbShowType;
-	url += "?api_key=" + process.env.TMDB_API_KEY + "&query=" + showName.replace(/\s/g, '+');
+	url += "?api_key=" + process.env.TMDB_API_KEY + "&query=" + encodeURIComponent(showName);
 	return url;
 }
 
