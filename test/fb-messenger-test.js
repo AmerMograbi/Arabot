@@ -37,6 +37,8 @@ describe('FbMessenger', function() {
 			let messageToSendBack = fbMessenger.receivedMessage(quickReplyEvent);
 			messageBuilderTest.okQuickReplyStructureTest(messageToSendBack);
 
+			//console.log(JSON.stringify(messageToSendBack, null, 2));
+
 			state = buildState("showTypes", turkishSeries);
 			quickReplyEvent = createQuickReplyEvent(state, "hello");			
 			messageToSendBack = fbMessenger.receivedMessage(quickReplyEvent);
