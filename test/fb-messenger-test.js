@@ -32,17 +32,22 @@ describe('FbMessenger', function() {
 		});
 
 		it('should send a good quick-reply on showType choose ', function() {
-			let state = buildState("showTypes", foreignMovies);
-			let quickReplyEvent = createQuickReplyEvent(state, "hello");
+
+			let state = buildState("showTypes", turkishSeries);
+			let quickReplyEvent = createQuickReplyEvent(state, "hello");			
 			let messageToSendBack = fbMessenger.receivedMessage(quickReplyEvent);
 			messageBuilderTest.okQuickReplyStructureTest(messageToSendBack);
 
-			//console.log(JSON.stringify(messageToSendBack, null, 2));
+			console.log(JSON.stringify(messageToSendBack, null, 2));
 
-			state = buildState("showTypes", turkishSeries);
-			quickReplyEvent = createQuickReplyEvent(state, "hello");			
+			state = buildState("showTypes", foreignMovies);
+			quickReplyEvent = createQuickReplyEvent(state, "hello");
 			messageToSendBack = fbMessenger.receivedMessage(quickReplyEvent);
-			messageBuilderTest.okQuickReplyStructureTest(messageToSendBack);			
+			messageBuilderTest.okQuickReplyStructureTest(messageToSendBack);
+
+			
+
+			
 		});
 
 		it('should send a good generic template on genre choose', function() {
