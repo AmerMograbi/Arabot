@@ -32,10 +32,15 @@ describe('FbMessenger', function() {
 		});
 
 		it('should send a good quick-reply on showType choose ', function() {
-			const state = buildState("showTypes", foreignMovies);
-			const quickReplyEvent = createQuickReplyEvent(state, "hello");
-			const messageToSendBack = fbMessenger.receivedMessage(quickReplyEvent);
+			let state = buildState("showTypes", foreignMovies);
+			let quickReplyEvent = createQuickReplyEvent(state, "hello");
+			let messageToSendBack = fbMessenger.receivedMessage(quickReplyEvent);
 			messageBuilderTest.okQuickReplyStructureTest(messageToSendBack);
+
+			state = buildState("showTypes", turkishSeries);
+			quickReplyEvent = createQuickReplyEvent(state, "hello");			
+			messageToSendBack = fbMessenger.receivedMessage(quickReplyEvent);
+			messageBuilderTest.okQuickReplyStructureTest(messageToSendBack);			
 		});
 
 		it('should send a good generic template on genre choose', function() {
@@ -119,12 +124,20 @@ describe('FbMessenger', function() {
 		});
 
 		it('should send a good quick-reply message on "startOver"', function() {
+			//testing the 'startOver' button after pressing 'liked'
 			const payload = buildStartOverPayload();
 			let state = buildState("likedResponse", payload);
-			const quickReplyEvent = createQuickReplyEvent(state, "hello");
+			let quickReplyEvent = createQuickReplyEvent(state, "hello");
+			const p1 = fbMessenger.receivedMessage(quickReplyEvent);
 
-			const messageToSendBack = fbMessenger.receivedMessage(quickReplyEvent);
-			messageBuilderTest.okQuickReplyStructureTest(messageToSendBack);
+			//testing the 'startOver' button after pressing 'moreInfo'
+			state = buildState("moreInfoResponse", payload);
+			quickReplyEvent = createQuickReplyEvent(state, "hello");	
+			const p2 = fbMessenger.receivedMessage(quickReplyEvent);
+
+			return Promise.all([p1, p2]).then(msgs => msgs.map(msg => {
+				messageBuilderTest.okQuickReplyStructureTest(msg);
+			}));
 		});
 
 
