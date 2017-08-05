@@ -88,7 +88,7 @@ describe('FbMessenger', function() {
 			(() => messageBuilderTest.okQuickReplyStructureTest(msg)).should.not.throw();
 		});
 
-		it('should send a good quick-reply message on "liked"', function() {
+		/*it('should send a good quick-reply message on "liked"', function() {
 
 			//testing the liked button that's on the show generic template msg
 			const payload = buildLikedPayload("76d6666f0a6147136c7d5ee1",
@@ -104,7 +104,7 @@ describe('FbMessenger', function() {
 			return Promise.all([p1, p2]).then(msgs => msgs.map(msg => {
 				messageBuilderTest.okQuickReplyStructureTest(msg);
 			}));
-		});
+		});*/
 
 		it('should send the next show on "nextShow"', function() {
 
@@ -120,11 +120,11 @@ describe('FbMessenger', function() {
 			const p2 = fbMessenger.receivedMessage(quickReplyEvent);
 
 			//testing the 'next' button that appears after pressing 'liked'
-			state = buildState("likedResponse", payload);
+			/*state = buildState("likedResponse", payload);
 			quickReplyEvent = createQuickReplyEvent(state, "hello");
-			const p3 = fbMessenger.receivedMessage(quickReplyEvent);
+			const p3 = fbMessenger.receivedMessage(quickReplyEvent);*/
 
-			return Promise.all([p1, p2, p3]).then(msgs => msgs.map(msg => {
+			return Promise.all([p1, p2]).then(msgs => msgs.map(msg => {
 				messageBuilderTest.okGenericTemplateStructureTest(msg);
 			}));
 
@@ -135,15 +135,16 @@ describe('FbMessenger', function() {
 			const payload = buildStartOverPayload();
 			let state = buildState("likedResponse", payload);
 			let quickReplyEvent = createQuickReplyEvent(state, "hello");
-			const p1 = fbMessenger.receivedMessage(quickReplyEvent);
+			//const p1 = fbMessenger.receivedMessage(quickReplyEvent);
 
 			//testing the 'startOver' button after pressing 'moreInfo'
 			state = buildState("moreInfoResponse", payload);
 			quickReplyEvent = createQuickReplyEvent(state, "hello");	
 			const p2 = fbMessenger.receivedMessage(quickReplyEvent);
 
-			return Promise.all([p1, p2]).then(msgs => msgs.map(msg => {
+			return Promise.all([p2]).then(msgs => msgs.map(msg => {
 				messageBuilderTest.okQuickReplyStructureTest(msg);
+				console.log(JSON.stringify(msg, null, 2));
 			}));
 		});
 
