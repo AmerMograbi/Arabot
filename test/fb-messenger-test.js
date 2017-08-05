@@ -142,7 +142,12 @@ describe('FbMessenger', function() {
 			quickReplyEvent = createQuickReplyEvent(state, "hello");	
 			const p2 = fbMessenger.receivedMessage(quickReplyEvent);
 
-			return Promise.all([p2]).then(msgs => msgs.map(msg => {
+			//testing the 'startOver' button after we get 'noMoreShows'
+			state = buildState("noMoreShows", payload);
+			quickReplyEvent = createQuickReplyEvent(state, "hello");
+			const p3 = fbMessenger.receivedMessage(quickReplyEvent);
+
+			return Promise.all([p2,p3]).then(msgs => msgs.map(msg => {
 				messageBuilderTest.okQuickReplyStructureTest(msg);
 				console.log(JSON.stringify(msg, null, 2));
 			}));
