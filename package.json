@@ -16,10 +16,13 @@
     "morgan": "~1.7.0",
     "node-cache": "^4.1.1",
     "request": "^2.79.0",
+    "rewire": "^2.5.2",
     "serve-favicon": "~2.3.2"
   },
   "main": "app.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "should": "^11.2.1"
+  },
   "author": "Amer Mograbi",
   "license": "ISC",
   "description": "An arabic facebook messenger chatbot for shows.",

@@ -38,7 +38,7 @@ describe('FbMessenger', function() {
 			let messageToSendBack = fbMessenger.receivedMessage(quickReplyEvent);
 			messageBuilderTest.okQuickReplyStructureTest(messageToSendBack);
 
-			console.log(JSON.stringify(messageToSendBack, null, 2));
+			//console.log(JSON.stringify(messageToSendBack, null, 2));
 
 			state = buildState("showTypes", foreignMovies);
 			quickReplyEvent = createQuickReplyEvent(state, "hello");

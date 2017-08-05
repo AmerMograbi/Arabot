@@ -1,9 +1,10 @@
 /*jshint esversion: 6 */
+"use strict";
 const showDataExtractor = require('../bin/show-data-extractor.js');
 const database = require('../lib/database.js');
 const arabicText = require('../arabic-text.json');
-const filePath = "D:\\gitProjects\\showBot\\bin\\movies.txt";
-const turkishSeriesFilePath = "D:\\gitProjects\\showBot\\bin\\turkishSeries.txt";
+const filePath = "C:\\Personal\\Projects\\arabicshowbot\\bin\\movies.txt";
+const turkishSeriesFilePath = "C:\\Personal\\Projects\\arabicshowbot\\bin\\turkishSeries.txt";
 const maxShowNum = 19;
 const foreignMovies = "foreignMovies";
 const turkishSeries = "turkishSeries";
@@ -17,13 +18,13 @@ function run() {
 
 	database.init(process.env.MONGODB_LOCAL_URI).then(() => {
 			//add(showDataExtractor.getShowsFromTxtFile(filePath), foreignMovies, "movie");
-			//addTurkishSeries();
+			addTurkishSeries();
 			//dropDb();
 			//addToSeenTest();
 			//printUsers();		
 			//findUser("123");
 			//printAllInCollection(turkishSeries);
-			database.dropCollection("users").then(res => console.log("collection dropped. res:" + res));
+			//database.dropCollection("users").then(res => console.log("collection dropped. res:" + res));
 		})
 		.catch((err) => console.log(err));
 }
@@ -35,9 +36,9 @@ function addTurkishSeries() {
 		.then(res => console.log("added " + res.result.n + " turkish series successfully."));
 }
 
-function printAllInCollection(showType){
+function printAllInCollection(showType) {
 	database.getAllInCollection(turkishSeries)
-	.then(items => console.log(JSON.stringify(items, null, 2) + "items.length= " + items.length));
+		.then(items => console.log(JSON.stringify(items, null, 2) + "items.length= " + items.length));
 }
 
 
